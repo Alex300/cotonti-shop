@@ -1,0 +1,36 @@
+#shop_cpanel{
+    width: 900px;
+}
+
+#shop_cpanel li {
+    background: url("../../../system/admin/tpl/img/menuitem.png") no-repeat scroll 0 0 transparent;
+    display: block;
+    float: left;
+    height: 60px;
+    padding: 12px 15px 10px;
+    width: 115px;
+}
+#shop_cpanel li a {
+    color: #3B3B3B;
+    display: block;
+    height: 100%;
+    opacity: 0.6;
+    text-align: center;
+}
+#shop_cpanel li a:hover {
+    opacity: 0.8;
+    text-decoration: none;
+}
+#shop_cpanel li a img {
+    height: 32px;
+    width: 32px;
+}
+#shop_cpanel li a span {
+    background: none repeat scroll 0 0 #DDDDDD;
+    display: block;
+    height: 18px;
+    line-height: 18px;
+    margin: 8px 0 0;
+    overflow: hidden;
+    text-align: center;
+}
