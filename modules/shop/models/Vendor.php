@@ -9,6 +9,7 @@ defined('COT_CODE') or die('Wrong URL.');
  *
  * @property int $vendor_id
  * @property string $vendor_title
+ * @property string $vendor_desc
  * @property int $curr_id    // Валюта продавца по-умолчанию
  * @property array $vendor_acc_currencies
  * @property string $vendor_email
@@ -100,7 +101,6 @@ class Vendor extends ShopModelAbstract {
             }
             $value = implode(',', $value);
         }
-
         $this->_data['vendor_acc_currencies'] = $value;
     }
 
