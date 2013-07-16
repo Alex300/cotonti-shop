@@ -169,6 +169,8 @@ function shopAutoLoader($class){
 function isShop(){
     global $env, $c, $pag;
 
+    if($env['location'] == 'shop')  return true;
+
     if ($env['location'] == 'list' || $env['location'] == 'pages'){
         $tmp = (isset($pag['page_cat'])) ? $pag['page_cat'] : $c;
         if (inShopCat($tmp)) return true;
@@ -653,6 +655,14 @@ function minicart($tpl = 'shop.minicart', $cacheitem = true){
                 $miniCartData->totalProductTxt = $L['shop']['cart_empty_cart'];
             }
 
+            if ($cart->dataValid == true) {
+                $taskRoute = '&a=confirm';
+                $linkName = $L['shop']['cart_confirm'];
+            } else {
+                $taskRoute = '';
+                $linkName = $L['shop']['cart_show'];
+            }
+
             if(!$tpl) $tpl = 'shop.minicart';
             $tpl = new XTemplate(cot_tplfile($tpl));
 
@@ -660,7 +670,10 @@ function minicart($tpl = 'shop.minicart', $cacheitem = true){
                 'TOTAL_PRODUCT' => $miniCartData->totalProduct,
                 'TOTAL_PRODUCT_TXT' => $miniCartData->totalProductTxt,
                 'BILL_TOTAL' => $miniCartData->billTotal,
-
+                'SHOW_CART' => cot_rc('shop_minicart_showcart', array(
+                            'url' => cot_url('shop', 'm=cart'.$taskRoute),
+                            'text' => $linkName
+                        )),
             ));
             if($cfg['shop']['mCartShowProdList'] == 1){
 

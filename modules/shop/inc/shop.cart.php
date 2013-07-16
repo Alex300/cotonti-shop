@@ -869,7 +869,10 @@ class CartController{
             $taskRoute = '';
             $linkName = $L['shop']['cart_show'];
         }
-        $data->cart_show = '<a href="'.cot_url('shop', 'm=cart'.$taskRoute).'">'.$linkName.'</a>';
+        $data->cart_show = cot_rc('shop_minicart_showcart', array(
+                'url' => cot_url('shop', 'm=cart'.$taskRoute),
+                'text' => $linkName
+            ));
         $data->cart_showUrl = cot_url('shop', 'm=cart'.$taskRoute);
         $data->cart_showTitle = $linkName;
         $data->billTotal = $L['shop']['cart_total'].': <strong>' . $data->billTotal . '</strong>';

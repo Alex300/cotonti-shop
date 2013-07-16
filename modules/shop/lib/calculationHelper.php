@@ -582,6 +582,9 @@ class calculationHelper {
         //price Without Tax but with calculated discounts AFTER Tax. So it just shows how much the shopper saves, regardless which kind of tax
         $prices['priceWithoutTax'] = $salesPrice - $prices['taxAmount'];
 
+        // Заполним в любом случае, чтобы можно было показывать цену без скидки
+        $prices['basePriceWithTax'] = $basePriceWithTax;
+
         $prices['variantModification'] = $variant;
 
         $prices['DBTax'] = array();

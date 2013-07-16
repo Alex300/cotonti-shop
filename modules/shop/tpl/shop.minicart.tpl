@@ -38,11 +38,7 @@
         <!-- ENDIF -->
     </div>
     <div class="total_products">{TOTAL_PRODUCT_TXT}</div>
-    <div class="show_cart">
-        <!-- IF {TOTAL_PRODUCT} -->
-        <a style ="float:right;" href="{PHP|cot_url('shop', 'm=cart')}">{PHP.L.shop.cart_show}</a>
-        <!-- ENDIF -->
-    </div>
+    <div class="show_cart"><!-- IF {TOTAL_PRODUCT} -->{SHOW_CART}<!-- ENDIF --></div>
     <div style="clear:both;"></div>
 
     <noscript>
