@@ -116,54 +116,7 @@ if (!defined('COT_ADMIN') && !in_array($m, array('add', edit))){
 //var_dump(cot_auth('shop', 'any', 'A'));
 // /Выводим выбор валют
 
-// на страницах редактирования/добавления не отображаем корзину
-if (!defined('COT_ADMIN') && (!defined('COT_AJAX') || !COT_AJAX ) && !in_array($m, array('add', edit)) ){
 
-    // выводим мини корзину
-    if ($cfg["shop"]['mCartOnShopOnly'] == 0 || ($cfg["shop"]['mCartOnShopOnly']==1 && isShop())){
-        
-        $cart = ShopCart::getInstance(false,false);
-        $miniCartData = $cart->prepareAjaxData();
-
-        if ($miniCartData->totalProduct > 1){
-            $miniCartData->totalProductTxt = sprintf($L['shop']['cart_x_products'], $miniCartData->totalProduct);
-        }else if ($miniCartData->totalProduct == 1){
-            $miniCartData->totalProductTxt = $L['shop']['cart_one_product'];
-        }else{
-            $miniCartData->totalProductTxt = $L['shop']['cart_empty_cart'];
-        }
-
-        $tpl = new XTemplate(cot_tplfile('shop.minicart'));
-        
-        $tpl->assign(array(
-            'TOTAL_PRODUCT' => $miniCartData->totalProduct,
-            'TOTAL_PRODUCT_TXT' => $miniCartData->totalProductTxt,
-            'BILL_TOTAL' => $miniCartData->billTotal,
-            
-        ));
-        if($cfg['shop']['mCartShowProdList'] == 1){
-            
-            foreach ($miniCartData->products as $product){
-                $product['attributes'] = (isset($product['attributes'])) ? $product['attributes'] : '';
-                $tpl->assign(array(
-                    'ROW_PRICE' => $product['prices'],
-                    'ROW_QUANTITY' => $product['quantity'],
-                    'ROW_TITLE' => $product['page_title'],
-                    'ROW_NAME' => $product['product_name'],
-                    'ROW_URL' => $product['url'],
-                    'ROW_ATTRIBUTES' => $product['attributes'],
-                ));
-                $tpl->parse('MAIN.LIST.ROW');
-            }
-            $tpl->parse('MAIN.LIST');
-        }
-        
-        $tpl->parse('MAIN');
-        $minicart = $tpl->text('MAIN');
-    }
-    // /выводим мини корзину
-
-}
 /**
  * Хеадер пока не выполнился 
  */
