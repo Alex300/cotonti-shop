@@ -192,7 +192,8 @@ $L['shop']['mobile_phone'] = "Мобильный телефон";
 $L['shop']['my_orders'] = 'Мои заказы';
 $L['shop']['no_payment_methods_configured'] = 'Способ оплаты не был настроен%1$s';
 $L['shop']['no_payment_methods_configured_link'] = ', перейдите %1$s';
-$L['shop']['no_payment_plugins_installed'] = "Нет установленных платежных плагинов. Пожалуйста, скачайте и установите их.";
+$L['shop']['no_payment_plugins_installed'] = 'Нет установленных платежных плагинов. Пожалуйста,
+<a href="http://portal30.ru/sozdanie-internet-sajtov/free-scripts/cotonti-shop" target="_blank">скачайте</a> и установите их.';
 $L['shop']['no_price_set'] = "Нет установленной цены";
 $L['shop']['no_shipping_methods_configured'] = 'Способ доставки не настроен %1$s';
 $L['shop']['no_shipping_methods_configured_link'] = ', пожалуйста настройте: %1$s';
@@ -202,7 +203,8 @@ $L['shop']["notify_me_desc"] = 'Мы вынуждены вам сообщить,
     пожелаете быть проинформированы о поступлении новой партии данного товара на наш склад.<br />Спасибо!';
 $L['shop']['oncheckout_default_text_register'] = "Чтобы оформить заказ и получить доступ к истории Ваших заказов, 
     Вы можете <strong>зарегистрироваться</strong>. Если Вы не хотите создавать учетную запись, Вы можете <strong>оформить заказ как Гость</strong>.";
-$L['shop']['no_shipment_plugins_installed'] = 'Нет установленных плагинов доставки. Пожалуйста, скачайте и установите их.';
+$L['shop']['no_shipment_plugins_installed'] = 'Нет установленных плагинов доставки. Пожалуйста,
+<a href="http://portal30.ru/sozdanie-internet-sajtov/free-scripts/cotonti-shop" target="_blank">скачайте</a> и установите их.';
 $L['shop']['order_confirm_mnu'] = "Подтвердить заказ";
 $L['shop']['order_create_date'] = "Дата заказа";
 $L['shop']['order_deleted'] = 'Заказ id# %1$s удален';

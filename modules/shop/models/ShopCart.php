@@ -356,13 +356,19 @@ class ShopCart Extends Order{
 
 
         if ($cfg["shop"]['automatic_shipment'] && $checkAutomaticSelected) {
-            if (!class_exists('ShipmentMethod')) require_once($cfg['modules_dir'].DS.'shop'.DS.'models'.DS.'shipmentmethod.php');
+
             $ships = ShipmentMethod::getListByUserId($usr['id'], $this->vendor_id);
 
             /* == Hook == */
             // см $returnValues = $dispatcher->trigger('plgVmOnCheckAutomaticSelectedShipment', array(  $this,$cart_prices, &$shipCounter));
 
             $nbShipment = count($ships);
+            if($nbShipment == 0){
+                $this->automaticSelectedShipment=false;
+                $this->save();
+                return false;
+            }
+
             $tmp = array_shift($ships);
             $shipmentmethod_id = (int)$tmp->shipm_id;
 
@@ -401,6 +407,11 @@ class ShopCart Extends Order{
             // см $returnValues = $dispatcher->trigger('plgVmOnCheckAutomaticSelectedPayment', array( $this, $cart_prices, &$paymentCounter));
 
             $nbPayment = count($pays);
+            if($nbPayment == 0){
+                $this->automaticSelectedPayment=false;
+                $this->save();
+                return false;
+            }
             $tmp = array_shift($pays);
             $paymentmethod_id = (int)$tmp->paym_id;
 
