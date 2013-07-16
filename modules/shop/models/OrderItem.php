@@ -389,7 +389,7 @@ class OrderItem extends ShopModelAbstract{
                     $curr = CurrencyDisplay::getInstance($vendor->curr_id, $item->vendor_id);
                 }
 
-//                $basePriceWithTax = '';
+                $basePriceWithTax = '';
                 $subtotalWithOutDiscount = '';
                 if ( !empty($item->prod_basePriceWithTax ) && $item->prod_basePriceWithTax != $item->prod_sales_price
                     && $item->prod_basePriceWithTax > 0) {

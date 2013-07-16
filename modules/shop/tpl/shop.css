@@ -40,69 +40,17 @@ span.addtocart-button{
     margin: 0 0 0 4px;
 }
 
-/*span.addtocart-button input.addtocart-button,span.addtocart-button input.notify-button{*/
-    /*width:152px;background:#e8e8e8 url(images/backgrounds.png) top repeat-x;*/
-    /*background-position:0 -160px;*/
-    /*color:#fff;*/
-    /*border:solid #00a000 1px;*/
-    /*border-radius:4px;*/
-    /*-webkit-border-radius:4px;*/
-    /*-moz-border-radius:4px;*/
-    /*font-size:14px;*/
-    /*cursor:pointer;*/
-    /*height:34px;*/
-    /*text-align:center;*/
-    /*letter-spacing:1px;*/
-    /*padding:4px 5px;*/
-/*}*/
-
-/*span.addtocart-button input.addtocart-button:hover,*/
-/*span.addtocart-button input.notify-button:hover,*/
-/*input.highlight-button:hover,*/
-/*a.highlight:hover{*/
-    /*background-position:0 -200px;color:#f2f2f2;*/
-/*}*/
-/*.shop-add_quantity_cart{*/
-    /*background: url(/images/icons/default/reset.png);*/
-    /*width:24px;*/
-    /*height:24px;*/
-    /*border: 0px;*/
-    /*cursor:pointer;*/
-/*}*/
-/*.shop-remove_from_cart{    */
-    /*background: url(/images/icons/default/delete.png) no-repeat; */
-    /*width: 24px;*/
-    /*height: 24px;*/
-    /*border: 0 none;*/
-    /*cursor: pointer; */
-    /*display: inline-block;*/
-    /*vertical-align: bottom;*/
-/*}*/
-
-/*.button-correct,.button-correct:hover,.button-correct:visited{*/
-    /*font-size:12px;*/
-    /*font-weight:700;*/
-    /*display:inline-block;*/
-    /*text-decoration:none;*/
-    /*color:#777;*/
-/*}*/
-/*.button-correct,.button-correct:link,.button-correct:visited{*/
-    /*background:#e8e8e8 url(images/backgrounds.png) top repeat-x;*/
-    /*background-position:0 -160px;*/
-    /*color:#fff;*/
-    /*border:solid #00a000 1px;*/
-    /*border-radius:4px;*/
-    /*-webkit-border-radius:4px;*/
-    /*-moz-border-radius:4px;*/
-    /*font-size:12px;*/
-    /*cursor:pointer;*/
-    /*text-align:center;*/
-    /*letter-spacing:1px;*/
-    /*display:inline-block;*/
-    /*text-decoration:none;*/
-    /*padding:6px 12px 3px;*/
-/*}*/
-/*.button-correct:hover{background-position:0 -200px;color:#f2f2f2;text-decoration:none;}*/
+/** prices */
+span.PricebasePriceWithTax{ text-decoration: line-through}
+span.PricesalesPrice{
+    font-weight: bold;
+    font-size: 130%;
+}
+div.PricediscountAmount{
+    font-size: small;
+    color: #717171;
+}
+/** /prices */
 
 input.shop_notvalid{border-color: red}
 /*input.shop_valid{border-color: green}*/

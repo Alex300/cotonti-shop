@@ -183,8 +183,8 @@ if (inShopCat($pag['page_cat'])){
        'PAGE_PROD_DBTAX_RULES_ARR' => $DBTaxRules,
        'PAGE_PROD_DATAX_RULES_ARR' => $DATaxRules,
        'PAGE_FORM_PROD_PRICE_OVERRIDE_PRICE' => cot_inputbox('text', 'rprice_override_price', 
-               $pag["_price_override_price"], array('size' => '24')),
-        'PAGE_FORM_PROD_PRICE_OVERRIDE' => cot_radiobox($pag['_price_override'], 'rprice_override', array_keys($OverrideOpts),
+               $pag['price']['override_price'], array('size' => '24')),
+        'PAGE_FORM_PROD_PRICE_OVERRIDE' => cot_radiobox($pag['price']['override'], 'rprice_override', array_keys($OverrideOpts),
             array_values($OverrideOpts)),
     ));
 

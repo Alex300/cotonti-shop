@@ -49,6 +49,14 @@ class ProductController{
 		$currency = CurrencyDisplay::getInstance($currId, $vendorId);
         $shopRootCat = shop_readShopCats();
         $shopRootCat = $shopRootCat[0];
+
+        $basePriceWithTax = 0;
+        if ( !empty($prices['basePriceWithTax'] ) && $prices['basePriceWithTax'] != $prices['salesPrice']
+            && $prices['basePriceWithTax'] > 0) {
+            $basePriceWithTax = $prices['basePriceWithTax'];
+        }
+        $prices['basePriceWithTax'] = $basePriceWithTax;
+
 		foreach ( $product->prices as $name => $product_price  ){
             $showBasePrice = cot_auth('page', $shopRootCat, 'A'); // todo add config settings
             if (!$showBasePrice && in_array($name, array('basePrice', 'basePriceVariant')) ){

@@ -145,29 +145,7 @@ class CurrencyDisplay {
         
         // Отображать ли цены данному пользователю
         $result = false;
-//        if($usr['id'] > 0){
-//            $q = 'SELECT `vx`.`virtuemart_shoppergroup_id` FROM `#__virtuemart_vmusers` as `u`
-//									LEFT OUTER JOIN `#__virtuemart_vmuser_shoppergroups` AS `vx` ON `u`.`virtuemart_user_id`  = `vx`.`virtuemart_user_id`
-//									LEFT OUTER JOIN `#__virtuemart_shoppergroups` AS `sg` ON `vx`.`virtuemart_shoppergroup_id` = `sg`.`virtuemart_shoppergroup_id`
-//									WHERE `u`.`virtuemart_user_id` = "'.$user->id.'" ';
-//            $this->_db->setQuery($q);
-//            $result = $this->_db->loadResult();
-//        }
-//		if(!$result){
-            // Отображать ли цены гостю
-//            $q = 'SELECT `price_display`,`custom_price_display` FROM `#__virtuemart_shoppergroups` AS `sg`
-//                                WHERE `sg`.`default` = "'.($user->guest+1).'" ';
-//
-//            $this->_db->setQuery($q);
-//            $result = $this->_db->loadRow();
-//
-//		} else {
-//			$q = 'SELECT `price_display`,`custom_price_display` FROM `#__virtuemart_shoppergroups` AS `sg`
-//										WHERE `sg`.`virtuemart_shoppergroup_id` = "'.$result.'" ';
-//
-//			$this->_db->setQuery($q);
-//			$result = $this->_db->loadRow();
-//		}
+
 
         if(!empty($result[0])){
             $result[0] = unserialize($result[0]);
@@ -267,7 +245,7 @@ class CurrencyDisplay {
      */
 	public function createPriceDiv($name, $description, $product_price, $priceOnly=false, $switchSequel=false,$quantity = 1.0){
 
-		if(empty($product_price)) return '';
+//		if(empty($product_price)) return '';
 
         //The fallback, when this price is not configured
         if(empty($this->_priceConfig[$name])) $name = "salesPrice";

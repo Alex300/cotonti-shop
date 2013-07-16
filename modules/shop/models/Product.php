@@ -850,10 +850,16 @@ class Product extends ShopModelAbstract{
                             $L['shop']['product_baseprice_variant'].': ', $item['prices'] );
                     }
 
+                    $basePriceWithTax = 0;
+                    if ( !empty($item['prices']['basePriceWithTax'] ) && $item['prices']['basePriceWithTax'] != $item['prices']['salesPrice']
+                        && $item['prices']['basePriceWithTax'] > 0) {
+                        $basePriceWithTax = $item['prices']['basePriceWithTax'];
+                    }
+
 //                    $temp_array['PROD_PRICE_VARIANT_MODIFICATION'] = $currency->createPriceDiv ( 'variantModification',
 //                        $L['shop']['product_variant_mod'].': ', $item['prices'] );
                     $temp_array['PROD_BASE_PRICE_WIDTH_TAX'] = $currency->createPriceDiv ( 'basePriceWithTax',
-                        $L['shop']['product_baseprice_withtax'].': ', $item['prices'] );
+                        $L['shop']['product_baseprice_withtax'].': ', $basePriceWithTax );
                     //==
                     $temp_array['PROD_DISCOUNTED_PRICE_WIDTHOUT_TAX'] =  $currency->createPriceDiv ( 'discountedPriceWithoutTax',
                         $L['shop']['product_discounted_price'].': ', $item['prices'] );
