@@ -51,7 +51,7 @@ class VendorController{
         if ($act == 'save'){
             $vid = cot_import('rid', 'P', 'INT');
             if(!$vid){
-
+                $vendor = new Vendor($vid);
             }else{
                 $vendor = Vendor::getById($vid);
             }
@@ -70,9 +70,9 @@ class VendorController{
         if(!$id){
             $id = 0;
             $adminpath[] = '&nbsp;'.$L['Add'];
+            $item = new Vendor();
         }else{
             if ($act != 'save'){
-                //$shipAdapter = new ShipmentMethod();
                 $item = Vendor::getById($id);
             }
             $adminpath[] = $item->vendor_title." [".$L['Edit']."]";
