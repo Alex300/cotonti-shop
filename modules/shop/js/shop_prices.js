@@ -262,8 +262,8 @@ var shop_userInfo = '';
 		$.getJSON("/index.php?e=shop&m=cart&a=viewJS",
 			function(datas, textStatus) {
 				if (datas.totalProduct > 0) {
-					mod.find(".shop_cart_products").html("")
-                                                   .fadeTo('fast', 0.3);
+					mod.find(".shop_cart_products").html("").fadeTo('fast', 0.3);
+                    mod.find(".total_products").fadeTo('fast', 0.3);
 					$.each(datas.products, function(key, val) {
 						$("#hiddencontainer .miniCart-container").clone().appendTo(".shopMiniCart .shop_cart_products");
 						$.each(val, function(key, val) {
@@ -273,7 +273,7 @@ var shop_userInfo = '';
 					mod.find(".total").html(datas.billTotal);
 					mod.find(".show_cart").html(datas.cart_show);
 				}
-				mod.find(".total_products").html(datas.totalProductTxt);
+				mod.find(".total_products").html(datas.totalProductTxt).fadeTo('fast', 1);
                 mod.find(".shop_cart_products").fadeTo('fast', 1).css('border-bottom', '1px dotted');
 			}
 		);
