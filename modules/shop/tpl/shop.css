@@ -41,12 +41,12 @@ span.addtocart-button{
 }
 
 /** prices */
-span.PricebasePriceWithTax{ text-decoration: line-through}
-span.PricesalesPrice{
+.product-price span.PricebasePriceWithTax{ text-decoration: line-through}
+.product-price span.PricesalesPrice{
     font-weight: bold;
     font-size: 130%;
 }
-div.PricediscountAmount{
+.product-price div.PricediscountAmount{
     font-size: small;
     color: #717171;
 }

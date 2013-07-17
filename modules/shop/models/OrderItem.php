@@ -83,6 +83,13 @@ class OrderItem extends ShopModelAbstract{
     public $price;
 
     /**
+     * Дополнительные цены
+     * для расчета цены при работе с корзиной
+     * @var array
+     */
+    public $add_prices;
+
+    /**
      * Static constructor
      */
     public static function __init(){
@@ -121,6 +128,7 @@ class OrderItem extends ShopModelAbstract{
             $this->_data['curr_id'] = $data->price['curr_id'];
             $this->price = $data->price;
             $this->prices = $data->prices;
+            $this->add_prices = $data->add_prices;
 
             // Принять данные, которые содержатся в страницах и есть в полях $db_shop_order_items
             $columns = array();
