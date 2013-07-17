@@ -361,7 +361,7 @@ function shop_renderPlgConfig($plg, $plgConfig, $t, $block = 'MAIN.EDIT'){
 				$inside_fieldset = true;
 				$t->assign('CONFIG_FIELDSET_TITLE', $L['cfg_struct_defaults']);
 				$t->parse($block.'.CONFIG_ROW.CONFIG_FIELDSET_BEGIN');
-			}
+	    }
 					
 			if ($config_type == COT_CONFIG_TYPE_STRING){
 				$config_input = cot_inputbox('text', $config_name, $config_value);
@@ -533,7 +533,8 @@ function shop_importPlgConig($plg, $src = 'P'){
  * @param type $name - имя элемента SELECT
  * @param type $chosen - Выбранный элемент или массив выбранных элементов
  * @param bool $add_empty - добавить пустой
- * @param type $multiple - Мульти ?
+ * @param bool|\type $multiple - Мульти ?
+ * @param int $size
  * @return string HTML код элемента SELECT
  */
 function shop_selectbox_countries($name, $chosen,  $add_empty = true, $multiple = false, $size = 0){
@@ -548,6 +549,31 @@ function shop_selectbox_countries($name, $chosen,  $add_empty = true, $multiple 
     if($size > 0) $attrs['size'] = $size;
 
     return cot_selectbox_countries($chosen, $name, $add_empty, $attrs);
+}
+
+/**
+ * Обертка для selectbox_countries т.к. в настройках неудается передать параметром массив
+ * @param type $name - имя элемента SELECT
+ * @param type $chosen - Выбранный элемент или массив выбранных элементов
+ * @param bool $add_empty - добавить пустой
+ * @param bool|\type $multiple - Мульти ?
+ * @param int $size
+ * @return string HTML код элемента SELECT
+ */
+function shop_selectbox_currency($name, $chosen,  $add_empty = true, $multiple = false, $size = 0){
+
+    if (mb_strtolower($add_empty) == 'false') $add_empty = false;
+    if (mb_strtolower($multiple) == 'false') $multiple = false;
+    $attrs = array('placeholder' => 'Select...');
+    if ($multiple){
+        $attrs['multiple'] = 'multiple';
+        if (mb_strpos('[]', $name) === false) $name .= '[]';
+    }
+    if($size > 0) $attrs['size'] = $size;
+
+    $currencies     = Currency::getKeyValPairsList();
+
+    return cot_selectbox($chosen, $name, array_keys($currencies), array_values($currencies), $add_empty, $attrs);
 }
 
 /**
@@ -626,7 +652,9 @@ function shop_readDirectory ($dir){
 
 /**
  * Виджет миникорзины
- * @param bool $stCache
+ * @param string $tpl
+ * @param bool $cacheitem
+ * @return string
  */
 function minicart($tpl = 'shop.minicart', $cacheitem = true){
     global $cfg, $L, $m;
