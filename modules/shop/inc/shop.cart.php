@@ -82,7 +82,7 @@ class CartController{
 		$useSSL = $cfg["shop"]['useSSL'];
 
         $cart->save();
-               
+
         global $priceTpl, $couponTpl, $loginTpl;
         $priceTpl = cot_tplfile('shop.cart.prodlist');
         $couponTpl = cot_tplfile('shop.coupon');
@@ -97,7 +97,6 @@ class CartController{
         }else{
             $selectedPayment = (empty($cart->paym_id) ? 0 : $cart->paym_id);
             $paymentMethods = PaymentMethod::getListByUserId($usr['id'], $cart->vendor_id);
-
 
             /* === Hook === */
             // Все плагины оплаты просматривают массив $paymentMethods и исключают из него те методы, которые не
@@ -431,7 +430,7 @@ class CartController{
             $vendorId = ($order->vendor_id > 0) ? $order->vendor_id : 1;
             $vendor = Vendor::getById($vendorId);
             $vendorMail = $vendor->vendor_email;
-            $shopperMail = $order->BT['email'];
+            $shopperMail = $order->billTo->oui_email;
 
             $notifyShopper = true;
             if ($vendorMail == $shopperMail) $notifyShopper = false;
@@ -527,7 +526,6 @@ class CartController{
 
 //                $costDisplay = '<span class="' . $this->_type . '_cost"> (' . JText::_('COM_VIRTUEMART_PLUGIN_COST_DISPLAY') . $costDisplay . ")</span>";
 
-                //var_dump($method);
                 $t->assign(array(
                     'METHOD_ROW_NUM' => $i,
                     'METHOD_ROW_ID' => $method['shipm_id'],
@@ -862,13 +860,11 @@ class CartController{
         }else{
             $data->totalProductTxt = $L['shop']['cart_empty_cart'];
         }
-        if ($data->dataValidated == true) {
-            $taskRoute = '&a=confirm';
-            $linkName = $L['shop']['cart_confirm'];
-        } else {
-            $taskRoute = '';
-            $linkName = $L['shop']['cart_show'];
-        }
+
+        // Даже если данные проверены, все равно с миникорзины уходим в большую
+        $taskRoute = '';
+        $linkName = $L['shop']['cart_show'];
+
         $data->cart_show = cot_rc('shop_minicart_showcart', array(
                 'url' => cot_url('shop', 'm=cart'.$taskRoute),
                 'text' => $linkName

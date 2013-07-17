@@ -270,12 +270,9 @@ class Order extends ShopModelAbstract{
             foreach (cot_getextplugins('shop.order.create') as $pl){
                 include $pl;
             }
-            if(empty($this->_data['order_number'])){
-                $this->_data['order_number'] = $this->generateOrderNumber($usr['id'],4, $this->_data['vendor_id']);
-            }
-            if(empty($this->_data['order_pass'])){
-                $this->_data['order_pass'] = 'p_'.substr( md5((string)time().$this->_data['order_number'] ), 0, 5);
-            }
+            $this->_data['order_number'] = $this->generateOrderNumber($usr['id'],4, $this->_data['vendor_id']);
+            $this->_data['order_pass'] = 'p_'.substr( md5((string)time().$this->_data['order_number'] ), 0, 5);
+
             $this->_data['order_salesPrice_origin'] = $this->_data['order_salesPrice'];
             $this->_data['order_status'] = 'P';
 

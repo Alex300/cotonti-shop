@@ -221,17 +221,17 @@ class ShipmentMethod extends ShopModelAbstract {
        
        return $id;
     }
-    
+
     /**
      * Получить все методы доставки для указанного пользователя
-     * @param $userId
+     * @param int $userId
+     * @param int $vendorid
      * @return array
      * @todo может надо Hook - Все плагины доставки просматривают массив $shipmentMethods и исключают из него те методы,
      *      которые неподходят для данного заказа
-     * @todo оптимизировать запросы в цикле
      */
     public static function getListByUserId($userId = 0, $vendorid = 0){
-        global $db, $db_groups_users, $db_shop_shipmethods, $db_shop_shipmethods_gr;
+        global $db, $db_groups_users;
 
         $userId = (int)$userId;
         $vendorid = (int)$vendorid;

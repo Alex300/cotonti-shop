@@ -151,7 +151,9 @@ class ShopCart Extends Order{
             $this->saveAddress($usr["profile"], 'BT', false);
         }
 
-        if(!isset($this->_data['user_id'])) $this->_data['user_id'] = $usr['id'];
+        // Пользователь мог авторизоваться и по этому нужно проверять не только установлен ли user_id, но и он должен
+        // быть больше нуля
+        if(empty($this->_data['user_id'])) $this->_data['user_id'] = $usr['id'];
         if($this->_data['user_id'] != $usr['id'] && !cot_auth('shop', 'any', 'A')) $this->_data['user_id'] = $usr['id'];
 
         // @todo fix me
@@ -500,6 +502,13 @@ class ShopCart Extends Order{
         $this->order_customer_note = '';
         $this->coupon_code = '';
         $this->tosAccepted = null;
+
+        foreach($this->_data as $key => $val){
+            if(!in_array($key, array('user_id', 'vendor_id', 'paym_id', 'shipm_id'))){
+                $this->_data[$key] = NULL;
+            }
+        }
+
 
         $this->save();
     }

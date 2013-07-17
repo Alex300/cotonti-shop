@@ -655,13 +655,9 @@ function minicart($tpl = 'shop.minicart', $cacheitem = true){
                 $miniCartData->totalProductTxt = $L['shop']['cart_empty_cart'];
             }
 
-            if ($cart->dataValid == true) {
-                $taskRoute = '&a=confirm';
-                $linkName = $L['shop']['cart_confirm'];
-            } else {
-                $taskRoute = '';
-                $linkName = $L['shop']['cart_show'];
-            }
+            // Даже если данные проверены, все равно с миникорзины уходим в большую
+            $taskRoute = '';
+            $linkName = $L['shop']['cart_show'];
 
             if(!$tpl) $tpl = 'shop.minicart';
             $tpl = new XTemplate(cot_tplfile($tpl));

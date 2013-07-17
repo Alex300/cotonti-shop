@@ -84,7 +84,6 @@ class Vendor extends ShopModelAbstract {
         }
         return $this->user['user_email'];
 
-//        return '';
     }
 
     public function getVendor_acc_currencies(){
@@ -106,73 +105,28 @@ class Vendor extends ShopModelAbstract {
 
     /**
      * Save Vendor Data
-     * @param type $data 
+     * @param bool|\type $data
      * @return int id of saved record
      */
-//	public function save($data = false){
-//        global $db, $db_shop_vendors, $sys, $usr;
-//
-//        if(!$data) $data = $this;
-//        if (is_object($data)) {
-//            $tmp = array();
-//            $data->vendor_acc_currencies = implode(',', $data->vendor_acc_currencies);
-//            // Iterate over the object variables to build the query fields and values.
-//            foreach (get_object_vars($data) as $k => $v){
-//                // Only process non-null scalars.
-//                if (is_array($v) or is_object($v) or $v === null) continue;
-//                $tmp[$k] = $v;
-//            }
-//            $data = $tmp;
-//        }else{
-//            $data['vendor_acc_currencies'] = implode(',', $data['vendor_acc_currencies']);
-//        }
-//
-//        $data['vendor_updated_on'] = date('Y-m-d H:i:s', $sys['now']);
-//        $data['vendor_updated_by'] = $usr['id'];
-//        if(!$data['vendor_id']) {
-//           // Добавить новый
-//           $data['vendor_created_on'] = date('Y-m-d H:i:s', $sys['now']);
-//           $data['vendor_created_by'] = $usr['id'];
-//           $data['vendor_ownerid'] = $usr['id'];
-//           $res = $db->insert($db_shop_vendors, $data);
-//           $id = $db->lastInsertId();
-//
-//           cot_log("Shop. Added vendor #".$id,'plg');
-//       }else{
-//           // Сохранить существующий
-//           $id = $data['vendor_id'];
-//           unset($data['vendor_id']);
-//           $res = $db->update($db_shop_vendors, $data, "vendor_id={$id}");
-//
-//           cot_log("Shop. Edited vendor #".$id,'plg');
-//       }
-//
-//       return $id;
-//    }
-    
-//    /**
-//     * Получить по id
-//     * @param int $id Vendor Id
-//     * @return Vendor
-//     */
-//    public static function getById($id){
-//         global $db, $db_shop_vendors, $cfg, $db_users;
-//
-//        $id = (int)$id;
-//        if (!$id) return false;
-//
-//        $res = $db->query("SELECT v.*, u.user_email as _user_email  FROM $db_shop_vendors as v
-//                LEFT JOIN $db_users as u ON v.vendor_ownerid=u.user_id
-//                WHERE vendor_id=$id");
-//        $data = $res->fetch();
-//        if (!$data) return false;
-//
-//        $data['vendor_acc_currencies'] = explode(',', $data['vendor_acc_currencies']);
-//        if (empty($data['vendor_email'])) $data['vendor_email'] = $data['_user_email'];
-//        $vendor = new Vendor($data);
-//        return  $vendor;
-//    }
+	public function save($data = false){
+        global $usr;
 
+        $itemId = $this->_data['vendor_id'];
+
+        if(empty($this->_data['vendor_ownerid'])) $this->_data['vendor_ownerid'] = $usr['id'];
+
+        $id = parent::save();
+        if(!$itemId){
+            // Добавить новый
+            if(!$id) return false;
+            cot_log("Shop. Added vendor #".$id,'plg');
+        }else{
+            cot_log("Shop. Edited vendor #".$id,'plg');
+        }
+
+        return $id;
+    }
+    
     /**
      * Get all objects from the database matching given conditions
      *
