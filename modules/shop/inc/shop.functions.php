@@ -334,7 +334,6 @@ function shop_renderPlgConfig($plg, $plgConfig, $t, $block = 'MAIN.EDIT'){
     // Plugin Config
     $info_cfg = cot_infoget($setup_file, 'COT_PLG_CONFIG');
     $options = cot_config_parse($info_cfg);
-//    var_dump($plgConfig);
     foreach ($options as $key => $row){
 		$config_owner = 'plug';
 		$config_cat = $plg;
@@ -411,10 +410,9 @@ function shop_renderPlgConfig($plg, $plgConfig, $t, $block = 'MAIN.EDIT'){
 				continue;
 
 			}elseif ($config_type == COT_CONFIG_TYPE_SEPARATOR){
-                if ($inside_fieldset)
-                {
+                if ($inside_fieldset){
                     // Close previous fieldset
-                    $t->parse('MAIN.EDIT.ADMIN_CONFIG_FIELDSET_END');
+                    $t->parse($block.'.CONFIG_ROW.CONFIG_FIELDSET_END');
                 }
                 $inside_fieldset = true;
 
@@ -460,8 +458,8 @@ function shop_renderPlgConfig($plg, $plgConfig, $t, $block = 'MAIN.EDIT'){
             //var_dump($row);
 			if ($config_type == COT_CONFIG_TYPE_SEPARATOR){
                 $cfg_title = is_array($L['cfg_' . $row['name']]) ? $L['cfg_' . $row['name']][0] : $L['cfg_' . $row['name']];
-                $t->assign('ADMIN_CONFIG_FIELDSET_TITLE', $cfg_title);
-                $t->parse('MAIN.EDIT.ADMIN_CONFIG_ROW.ADMIN_CONFIG_FIELDSET_BEGIN');
+                $t->assign('CONFIG_FIELDSET_TITLE', $cfg_title);
+                $t->parse($block.'.CONFIG_ROW.CONFIG_FIELDSET_BEGIN');
 			}else{
 				$t->assign(array(
 					'CONFIG_ROW_CONFIG' => $config_input,
@@ -489,7 +487,12 @@ function shop_renderPlgConfig($plg, $plgConfig, $t, $block = 'MAIN.EDIT'){
         $t->parse($block.'.ADMIN_CONFIG_ROW.ADMIN_CONFIG_FIELDSET_END');
         $t->parse($block.'.ADMIN_CONFIG_ROW');
     }
-    
+    /* === Hook  === */
+    foreach (cot_getextplugins('shop.plugin.config.tags') as $pl)
+    {
+        include $pl;
+    }
+    /* ===== */
     $t->parse($block);
     //var_dump($options);
 
@@ -552,7 +555,7 @@ function shop_selectbox_countries($name, $chosen,  $add_empty = true, $multiple 
 }
 
 /**
- * Обертка для selectbox_countries т.к. в настройках неудается передать параметром массив
+ * Выбор валюты из всех возможных
  * @param type $name - имя элемента SELECT
  * @param type $chosen - Выбранный элемент или массив выбранных элементов
  * @param bool $add_empty - добавить пустой
@@ -571,10 +574,36 @@ function shop_selectbox_currency($name, $chosen,  $add_empty = true, $multiple =
     }
     if($size > 0) $attrs['size'] = $size;
 
-    $currencies     = Currency::getKeyValPairsList();
+    $items = Currency::getKeyValPairsList();
 
-    return cot_selectbox($chosen, $name, array_keys($currencies), array_values($currencies), $add_empty, $attrs);
+    return cot_selectbox($chosen, $name, array_keys($items), array_values($items), $add_empty, $attrs);
 }
+
+/**
+ * Выбор статуса заказа из всех возможных
+ * @param type $name - имя элемента SELECT
+ * @param type $chosen - Выбранный элемент или массив выбранных элементов
+ * @param bool $add_empty - добавить пустой
+ * @param bool|\type $multiple - Мульти ?
+ * @param int $size
+ * @return string HTML код элемента SELECT
+ */
+function shop_selectbox_orderStatus($name, $chosen,  $add_empty = true, $multiple = false, $size = 0){
+
+    if (mb_strtolower($add_empty) == 'false') $add_empty = false;
+    if (mb_strtolower($multiple) == 'false') $multiple = false;
+    $attrs = array('placeholder' => 'Select...');
+    if ($multiple){
+        $attrs['multiple'] = 'multiple';
+        if (mb_strpos('[]', $name) === false) $name .= '[]';
+    }
+    if($size > 0) $attrs['size'] = $size;
+
+    $items = OrderStatus::getKeyValPairsList();
+
+    return cot_selectbox($chosen, $name, array_keys($items), array_values($items), $add_empty, $attrs);
+}
+
 
 /**
  * Select box валюты, принимаемые продавцом 

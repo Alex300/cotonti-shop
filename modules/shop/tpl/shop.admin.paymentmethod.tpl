@@ -137,6 +137,7 @@
         
         <!-- BEGIN: PLUG_CONFIG -->
         <h3><img src="system/admin/img/config.png" style="vertical-align:middle;" /> {PHP.L.Configuration}</h3>
+        {CONFIG_EDIT_CUSTOM}
             <table class="cells">
             <!-- BEGIN: CONFIG_ROW -->
                 <!-- BEGIN: CONFIG_FIELDSET_BEGIN -->
