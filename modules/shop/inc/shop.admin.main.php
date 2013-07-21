@@ -32,7 +32,7 @@ class MainController{
         global $adminpath, $adminhelp, $db,  $cfg,  $L;
         
 //        $adminpath[] = '&nbsp;'.$L['shop']['control_panel'];
-        $pAccountUrl = cot_url('shop', 'e=shop&m=order');
+        $pAccountUrl = cot_url('shop', '&m=order');
         $adminhelp = $L['shop']['user_account_here'].": <a href=\"{$pAccountUrl}\" target=\"_blank\">{$pAccountUrl}</a>";
 
         $tpl = new XTemplate(cot_tplfile('shop.admin.main'));
