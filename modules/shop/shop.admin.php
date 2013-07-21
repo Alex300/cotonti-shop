@@ -59,7 +59,7 @@ if (COT_AJAX) {
     require_once $cfg['system_dir'] . '/footer.php';
     exit;
 }
-
+$adminhelp .= '<p><a href="http://portal30.ru/sozdanie-internet-sajtov/free-scripts/cotonti-shop" target="_blanl">powered by portal30</a></p>';
 $t->assign('CONTENT', $shopContent);
 
 // Error and message handling
