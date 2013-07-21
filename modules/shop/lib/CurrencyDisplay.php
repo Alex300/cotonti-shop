@@ -66,7 +66,7 @@ class CurrencyDisplay {
 	 * @param int 		$vendorId Id of the vendor
 	 * @return CurrencyDisplay
 	 */
-	public function getInstance($currencyId=0, $vendorId=0){
+	public static function getInstance($currencyId=0, $vendorId=0){
         global $usr, $L, $n, $m;
 
         if(empty(self::$_instance)  || (!empty($currencyId) && $currencyId != self::$_instance->_currency_id) ){

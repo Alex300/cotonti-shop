@@ -10,8 +10,10 @@
     {PHP.L.shop.order_create_date}: <strong>{ORDER_CREATE_DATE}</strong><br/>
     <!-- todo last updated date -->
     {PHP.L.shop.order_status}: <strong>{ORDER_STATUS_TITLE}</strong><br/>
-    {PHP.L.shop.payment_method}: {ORDER_PAYMENT_TITLE} <span class="small italic">({ORDER_PAYMENT_DESC})</span><br/>
-    {PHP.L.shop.shipment_method}: {ORDER_SHIPMENT_TITLE} <span class="small italic">({ORDER_SHIPMENT_DESC})</span><br/>
+    {PHP.L.shop.payment_method}: {ORDER_PAYMENT_TITLE}
+    <!-- IF {ORDER_PAYMENT_DESC} --><span class="small italic">({ORDER_PAYMENT_DESC})</span><!-- ENDIF --><br/>
+    {PHP.L.shop.shipment_method}: {ORDER_SHIPMENT_TITLE}
+    <!-- IF {ORDER_SHIPMENT_DESC} --><span class="small italic">({ORDER_SHIPMENT_DESC})</span><!-- ENDIF --><br/>
 
     {PHP.L.shop.order_total}: <strong>{ORDER_TOTAL}</strong>
 </div>

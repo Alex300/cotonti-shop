@@ -60,6 +60,15 @@
             <span>{PHP.L.shop.currency}</span>
         </a>
     </li>
+
+    <!-- IF {PHP.L.shop.documentation_url} != '' -->
+    <li>
+        <a href="{PHP.L.shop.documentation_url}" target="_blank">
+            <img alt="{PHP.L.shop.documentation}" src="{PHP.cfg.system_dir}/admin/tpl/img/help.png">
+            <span>{PHP.L.shop.documentation}</span>
+        </a>
+    </li>
+    <!-- ENDIF -->
 </ul>
 
 <div class="clear" style="height: 1px;"></div>
