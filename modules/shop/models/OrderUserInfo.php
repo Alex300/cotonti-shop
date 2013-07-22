@@ -19,6 +19,7 @@ defined('COT_CODE') or die('Wrong URL.');
  * @property string	$oui_zip            Почтовый индекс
  * @property string	$oui_country
  * @property int	$oui_region
+ * @property string	$oui_phone
  *
  * @method static OrderUserInfo getById(int $pk)
  * @method static OrderUserInfo[] getList(int $limit = 0, int $offset = 0, string $order = '')

@@ -85,8 +85,9 @@ class UserController{
             $prefix = '';
             if ($usr['id'] == 0) {
                 //New Address is filled here with the data of the cart (we are in the cart)
-                $cart = ShopCart::getCart();
-                $uData = $cart->$type;
+                $tmp = ($type == 'BT') ? 'billTo' : 'shipTo';
+                $cart = ShopCart::getInstance();
+                $uData = $cart->$tmp;
                 if(!$uData) $uData = array();
             } else {
                 if ($type == 'BT'){

@@ -914,7 +914,6 @@ class Product extends ShopModelAbstract{
                         if (!$notifyFormOut){
                             $userEmail = '';
                             $userName = '';
-//                var_dump($cfg['shop']);
 
                             if (!$uData) $uData = Userfields::getFieldsData($usr['profile'], 'BT', 'notify_', 'user_');
                             if($uData){
@@ -925,11 +924,11 @@ class Product extends ShopModelAbstract{
                                 $userName = trim($userName);
                                 $userPhone = trim($uData[$cfg['shop']['uextf_phone']]["field_value"]);
                             }else{
-                                $cart = ShopCart::getCart();
-                                if(!empty($cart->BT)){
-                                    $userEmail = $cart->BT['email'];
-                                    $userName = "{$cart->BT['last_name']} {$cart->BT['first_name']} {$cart->BT['middle_name']}";
-                                    $userPhone = $cart->BT['phone'];
+                                $cart = ShopCart::getInstance();
+                                if(!empty($cart->billTo)){
+                                    $userEmail = $cart->billTo->oui_email;
+                                    $userName = "{$cart->billTo->oui_lastname} {$cart->billTo->oui_firstname} {$cart->billTo->oui_middlename}";
+                                    $userPhone = $cart->billTo->oui_phone;
                                 }
                             }
                             $tpl->assign(array(
