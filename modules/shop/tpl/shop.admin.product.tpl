@@ -35,7 +35,9 @@ jQuery(document).ready(function($) {
         <input type="text" name="fil[title]" value="{LIST_FILTER_TITLE}" />
         &nbsp;
         {PHP.L.Category}: {LIST_FILTER_CAT}<br />
+        <!-- IF {LIST_FILTER_MF} -->
         {PHP.L.shop.manufacturer}: {LIST_FILTER_MF}
+        <!-- ENDIF -->
         <input type="submit" value="{PHP.L.Show}" />
     </form>
 <div style="text-align: right">

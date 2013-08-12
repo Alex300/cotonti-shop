@@ -256,9 +256,10 @@ class Order extends ShopModelAbstract{
 
     /**
      * Save Order
+     * @param null $data  // don't use it
      * @return int id of saved record
      */
-    public function save(){
+    public function save($data = null){
         global $usr, $db, $db_shop_order_calc_rules, $db_shop_order_history, $sys;
 
         $order_id = $this->_data['order_id'];

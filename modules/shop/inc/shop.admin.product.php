@@ -104,41 +104,42 @@ class ProductController{
 
         $tpl = new XTemplate(cot_tplfile('shop.admin.product'));
         $jj = 0;
-        foreach ($products as $prod){
-            $jj++;
+        if(!empty($products)){
+            foreach ($products as $prod){
+                $jj++;
 
-            $pag = $prod->toArray();
+                $pag = $prod->toArray();
 
-            $tpl->assign(cot_generate_pagetags($pag, 'LIST_ROW_'));
-            $tpl->assign($this->generatePageEditTags($prod, 'LIST_ROW_EDIT_', true));
-            $product_price = $L['shop']['no_price_set'];
-            if(!empty($prod->price) && !empty($prod->price['curr_id']) ){
-                $product_price = $currencyDisplay->priceDisplay($prod->price['price'], (int)$prod->price['curr_id'], 1, true);
+                $tpl->assign(cot_generate_pagetags($pag, 'LIST_ROW_'));
+                $tpl->assign($this->generatePageEditTags($prod, 'LIST_ROW_EDIT_', true));
+                $product_price = $L['shop']['no_price_set'];
+                if(!empty($prod->price) && !empty($prod->price['curr_id']) ){
+                    $product_price = $currencyDisplay->priceDisplay($prod->price['price'], (int)$prod->price['curr_id'], 1, true);
+                }
+                $prodUrlP = empty($prod->page_alias) ? array('c' => $prod->page_cat, 'id' => $prod->prod_id) :
+                        array('c' => $prod->page_cat, 'al' => $prod->page_alias);
+
+                $pag['page_status'] = cot_page_status($pag['page_state'], $pag['page_begin'],$pag['page_expire']);
+                $edit_url = cot_url('page', "m=edit&id={$prod->prod_id}");
+
+                $tpl->assign(array(
+                    'LIST_ROW_SKU' => htmlspecialchars($prod->sku),
+                    'LIST_ROW_PRICE' => $product_price,
+                    'LIST_ROW_PUBLISH' => ($pag['page_status'] == 'published') ? $L['Yes'] : $L['No'],
+                    'LIST_ROW_STATUS' => $L['page_status_'.$pag['page_status']],
+                    'LIST_ROW_STATE' => $pag['page_state'],
+                    'LIST_ROW_EDIT_PRICE' => '<a href="'.$edit_url.'" id="price_'.$prod->prod_id.'" class="edit_price">'.
+                        $product_price.'</a>',
+                    'LIST_ROW_OWNER' => cot_build_user($pag['page_ownerid'], htmlspecialchars($pag['user_name'])),
+                    'LIST_ROW_COMMENTS' => ($commEnabl) ? cot_comments_link('page', $prodUrlP, 'page', $prod->prod_id, '',
+                            $pag) : '',
+                    'LIST_ROW_ODDEVEN' => cot_build_oddeven($jj),
+                    'LIST_ROW_NUM' => $jj,
+                ));
+                $tpl->assign(cot_generate_usertags($pag, 'LIST_ROW_OWNER_'));
+                $tpl->parse('MAIN.LIST_ROW');
             }
-            $prodUrlP = empty($prod->page_alias) ? array('c' => $prod->page_cat, 'id' => $prod->prod_id) :
-                    array('c' => $prod->page_cat, 'al' => $prod->page_alias);
-            
-            $pag['page_status'] = cot_page_status($pag['page_state'], $pag['page_begin'],$pag['page_expire']);
-            $edit_url = cot_url('page', "m=edit&id={$prod->prod_id}");
-            
-            $tpl->assign(array(
-                'LIST_ROW_SKU' => htmlspecialchars($prod->sku),
-                'LIST_ROW_PRICE' => $product_price,
-                'LIST_ROW_PUBLISH' => ($pag['page_status'] == 'published') ? $L['Yes'] : $L['No'],
-                'LIST_ROW_STATUS' => $L['page_status_'.$pag['page_status']],
-                'LIST_ROW_STATE' => $pag['page_state'],
-                'LIST_ROW_EDIT_PRICE' => '<a href="'.$edit_url.'" id="price_'.$prod->prod_id.'" class="edit_price">'.
-                    $product_price.'</a>',
-                'LIST_ROW_OWNER' => cot_build_user($pag['page_ownerid'], htmlspecialchars($pag['user_name'])),
-                'LIST_ROW_COMMENTS' => ($commEnabl) ? cot_comments_link('page', $prodUrlP, 'page', $prod->prod_id, '',
-                        $pag) : '',
-                'LIST_ROW_ODDEVEN' => cot_build_oddeven($jj),
-                'LIST_ROW_NUM' => $jj,
-            ));
-            $tpl->assign(cot_generate_usertags($pag, 'LIST_ROW_OWNER_'));
-            $tpl->parse('MAIN.LIST_ROW');
         }
-
         if (isset($pagenav['current']) && $pagenav['current'] > 1){
             $list_url_path = $list_url_path + array('d' => $durl);
         }
@@ -150,6 +151,13 @@ class ProductController{
         foreach ($cats as $cat) {
             $catFilter[$cat] = $structure['page'][$cat]['tpath'];
             //var_dump($structure['page'][$cat]['tpath']);
+        }
+
+        $filterMf = '';
+        if(!empty($mfArr)){
+            $filterMf = cot_selectbox($fil[$cfg["shop"]['pextf_manufacturer_id']],
+                "fil[{$cfg["shop"]['pextf_manufacturer_id']}]" , array_keys($mfArr),
+                array_values($mfArr));
         }
         $tpl->assign(array(
             'LIST_PAGINATION' => $pagenav['main'],
@@ -165,9 +173,7 @@ class ProductController{
             'LIST_URL' =>  cot_url('admin', $list_url_path, '', true),
             'LIST_FILTER_CAT' => cot_selectbox($fil['_cat'], 'fil[_cat]' , array_keys($catFilter), 
                 array_values($catFilter),false).' '.cot_checkbox($fil['_sucat'], 'fil[_sucat]', 'Subcats', 1),
-            'LIST_FILTER_MF' => cot_selectbox($fil[$cfg["shop"]['pextf_manufacturer_id']],
-                    "fil[{$cfg["shop"]['pextf_manufacturer_id']}]" , array_keys($mfArr),
-                array_values($mfArr)),
+            'LIST_FILTER_MF' => $filterMf,
         ));
         
         $tpl->parse('MAIN');
