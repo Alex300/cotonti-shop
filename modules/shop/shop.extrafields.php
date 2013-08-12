@@ -17,7 +17,7 @@ require_once cot_incfile('shop', 'module');
 
 $extra_whitelist[$db_shop_shop_userinfo] = array(
 	'name' => $db_shop_shop_userinfo,
-	'caption' => $L['Module'].' Shop',
+	'caption' => $L['Module'].' «Shop»',
 	'type' => 'module',
 	'code' => 'shop',
 	'tags' => array(
@@ -30,10 +30,18 @@ $extra_whitelist[$db_shop_shop_userinfo] = array(
 	)
 );
 
+// in development
+//$extra_whitelist[$db_shop_orders] = array(
+//    'name' => $db_shop_orders,
+//    'caption' => $L['Module'].' «Shop»',
+//    'type' => 'module',
+//    'code' => 'shop',
+//    'tags' => array()
+//);
 
 $extra_whitelist[$db_shop_order_items] = array(
     'name' => $db_shop_order_items,
-    'caption' => $L['Module'].' Shop',
+    'caption' => $L['Module'].' «Shop»',
     'type' => 'module',
     'code' => 'shop',
     'tags' => array()
@@ -41,7 +49,7 @@ $extra_whitelist[$db_shop_order_items] = array(
 
 $extra_whitelist[$db_shop_order_userinfo] = array(
     'name' => $db_shop_order_userinfo,
-    'caption' => $L['Module'].' Shop',
+    'caption' => $L['Module'].' «Shop»',
     'type' => 'module',
     'code' => 'shop',
     'tags' => array()

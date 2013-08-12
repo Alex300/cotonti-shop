@@ -6,7 +6,7 @@
  * @subpackage cart
  * @author Alex
  * @copyright http://portal30.ru
- *
+ * @todo orderExtra Felds
  */
 defined('COT_CODE') or die('Wrong URL.');
 

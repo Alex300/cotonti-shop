@@ -871,7 +871,7 @@ class Order extends ShopModelAbstract{
      * @todo ORDER_STATUS_TITLE
      */
     public static function generateTags($order, $tagPrefix = '', $userType = 'shopper', $cacheitem = true){
-        global $cfg, $cot_countries;
+        global $cfg, $cot_countries, $db_shop_orders, $cot_extrafields;
 
         static $extp_first = null, $extp_main = null;
         static $order_cache = array();
@@ -1016,13 +1016,15 @@ class Order extends ShopModelAbstract{
                     $orderArray['PASSWORD'] = $order->order_pass;
                 }
                 // Extrafields
-//                if (isset($cot_extrafields[$db_pages])){
-//                    foreach ($cot_extrafields[$db_pages] as $row) {
-//                        $tag = mb_strtoupper($row['field_name']);
-//                        $orderArray[$tag.'_TITLE'] = isset($L['page_'.$row['field_name'].'_title']) ?  $L['page_'.$row['field_name'].'_title'] : $row['field_description'];
-//                        $orderArray[$tag] = cot_build_extrafields_data('page', $row, $order["page_{$row['field_name']}"], $order['page_parser']);
-//                    }
-//                }
+                if (isset($cot_extrafields[$db_shop_orders])){
+                    foreach ($cot_extrafields[$db_shop_orders] as $row) {
+                        $tag = mb_strtoupper($row['field_name']);
+                        $orderArray[$tag.'_TITLE'] = isset($L['shop_'.$row['field_name'].'_title']) ?  $L['shop_'.$row['field_name'].'_title'] : $row['field_description'];
+                        $field = "order_{$row['field_name']}";
+                        $orderArray[$tag] = cot_build_extrafields_data('page', $row, $order->{$field});
+                        $tagsArray[$tag.'_VALUE'] = $order->$field;
+                    }
+                }
 
                 $orderArray['PAYMENT_TEXT']  = $orderArray['SHIPMENT_TEXT'] = '';
                 // Тут плагины в теги PAYMENT_TEXT и SHIPMENT_TEXT могут вывести свою инфу
