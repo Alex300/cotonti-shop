@@ -45,6 +45,10 @@ if ($dbres->fetchColumn() == 0){
     $db->query($shopSQl);
 }
 
+if(!function_exists('cot_extrafield_add')){
+    require_once cot_incfile('extrafields');
+}
+
 // Поля для адресов доставки
 //cot_extrafield_add($db_shop_shop_userinfo, 'title', 'input', '', '', '', true);
 cot_extrafield_add($db_shop_shop_userinfo, 'company', 'input');
