@@ -73,4 +73,9 @@
 
 <div class="clear" style="height: 1px;"></div>
 
+<div class="textcenter margintop10">
+    <em>{PHP.L.shop.module_version}:</em> <strong>{PHP.cot_modules.shop.version}</strong>.
+    <a href="{PHP.L.shop.module_homepage_url}"
+       target="_blank">{PHP.L.shop.check_updates}</a></div>
+
 <!-- END: MAIN -->
