@@ -35,7 +35,7 @@ class CartController{
      * Show Cart
      */
     public function indexAction(){
-        global $L, $cfg, $out, $usr, $R, $redirect, $sys, $cot_plugins, $cart, $cot_countries;
+        global $L, $cfg, $out, $usr, $R, $redirect, $sys, $cot_plugins, $cart, $cot_extrafields, $db_shop_orders;
         
         $cart = ShopCart::getInstance(true);
         // Для отладки можно очистить корзину
@@ -352,7 +352,23 @@ class CartController{
         if (!$cfg["shop"]['use_as_catalog']) {
             $checkout_link_html = cot_rc('shop_btn_order_confirm');
         }
-        
+
+        // Extra fields
+        foreach($cot_extrafields[$db_shop_orders] as $exfld) {
+            $uname = strtoupper($exfld['field_name']);
+            $field = "order_{$exfld['field_name']}";
+            $exfld_val = cot_build_extrafields('order'.$exfld['field_name'], $exfld, $cart->{$field});
+            $exfld_title = isset($L['shop_'.$exfld['field_name'].'_title']) ?  $L['shop_'.$exfld['field_name'].'_title'] : $exfld['field_description'];
+
+            $t->assign(array(
+                'ORDER_FORM_'.$uname => $exfld_val,
+                'ORDER_FORM_'.$uname.'_TITLE' => $exfld_title,
+                'ORDER_FORM_EXTRAFLD' => $exfld_val,
+                'ORDER_FORM_EXTRAFLD_TITLE' => $exfld_title
+            ));
+            $t->parse('MAIN.EXTRAFLD');
+        }
+
 
         // TODO CONTINUE_LINK из рессурсов
         $t->assign(array(
@@ -362,7 +378,7 @@ class CartController{
             'CONTINUE_URL'      => $continue_url,
             // TODO учесть useSSL
             'CHECKOUT_FORM_ACTION' => cot_url('shop', array('m'=>'cart', 'a'=>$checkout_task)),
-            'CHECKOUT_FORM_COMMENT' =>$cart->order_customer_note,
+            'CHECKOUT_FORM_COMMENT' => $cart->order_customer_note,
             'CHECKOUT_TOS' => $cart->vendor->vendor_terms_of_service,
             'CHECKOUT_FORM_TOS_ACCEPT' => cot_checkbox($cart->tosAccepted, 'tosAccepted', $L['shop']['cart_tos_read_and_accepted']),
             'CHECKOUT_FORM_SUBMIT' =>  $checkout_link_html,

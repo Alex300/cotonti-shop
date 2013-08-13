@@ -537,9 +537,10 @@ class ShopCart Extends Order{
      * Validate order Data
      * @param bool $redirect
      * @return boolean
+     * @todo перенести в контроллер заполнение данных CartController::checkoutAction()
      */
     public function checkoutData($redirect = true) {
-        global $L, $cfg, $usr;
+        global $L, $cfg, $usr, $cot_extrafields, $db_shop_orders;
 
         $this->_redirect = $redirect;
         // Возможно надо безусловно $this->_inCheckOut = true;
@@ -550,6 +551,14 @@ class ShopCart Extends Order{
 
         // Возможно нужно ввести по-умолчанию, если customer_comment - не передано, использовать $this->customer_comment;
         if (isset($_POST['customer_comment'])) $this->order_customer_note = cot_import('customer_comment', 'P', 'TXT');
+
+        // Extra fields
+        foreach ($cot_extrafields[$db_shop_orders] as $exfld){
+            $field = "order_{$exfld['field_name']}";
+            $this->{$field} = cot_import_extrafields('order'.$exfld['field_name'], $exfld, 'P', $this->{$field});
+        }
+
+
         $shipto = null;
 
         $bt_as_st = cot_import('bt_as_st', 'P', 'BOL');

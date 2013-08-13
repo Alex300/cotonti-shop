@@ -30,14 +30,17 @@ $extra_whitelist[$db_shop_shop_userinfo] = array(
 	)
 );
 
-// in development
-//$extra_whitelist[$db_shop_orders] = array(
-//    'name' => $db_shop_orders,
-//    'caption' => $L['Module'].' «Shop»',
-//    'type' => 'module',
-//    'code' => 'shop',
-//    'tags' => array()
-//);
+$extra_whitelist[$db_shop_orders] = array(
+    'name' => $db_shop_orders,
+    'caption' => $L['Module'].' «Shop»',
+    'type' => 'module',
+    'code' => 'shop',
+    'tags' => array(
+        'shop.cart.tpl' => '{ORDER_FORM_XXXXX}, {ORDER_FORM_XXXXX_TITLE}',
+        'shop.order.details.tpl' => '{ORDER_XXXXX}, {ORDER_XXXXX_TITLE}',
+        'shop.admin.order.tpl' => '{LIST_ROW_XXXXX}, {LIST_ROW_XXXXX_TITLE}, {ORDER_XXXXX}, {ORDER_XXXXX_TITLE}, {ORDER_FORM_XXXXX}, {ORDER_FORM_XXXXX_TITLE}',
+    )
+);
 
 $extra_whitelist[$db_shop_order_items] = array(
     'name' => $db_shop_order_items,

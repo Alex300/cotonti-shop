@@ -117,7 +117,7 @@
 
 {FILE "{PHP.priceTpl}"}
 
-<!-- TODO Форма оформления заказа -->
+<!-- Форма оформления заказа -->
 <form method="post" id="checkoutForm" name="checkoutForm" action="{CHECKOUT_FORM_ACTION}">
 
     <div class="margintop10">
