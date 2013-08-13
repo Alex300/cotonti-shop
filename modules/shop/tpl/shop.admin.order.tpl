@@ -416,6 +416,23 @@
             </tr>
         </table>
 
+        <!-- IF {ORDER_FORM_EXTRAFLD} -->
+        <form method="post" id="orderItemForm" name="orderItemForm"
+              action="{ORDER_ID|cot_url('admin', 'm=shop&n=order&a=edit&id=$this')}">
+            <input type="hidden" name="act" value="save" />
+            <input type="hidden" name="id" value="{ORDER_ID}" />
+            <table class="cells paddingtop10 margintop10" >
+                <!-- BEGIN: EXTRAFLD -->
+                <tr>
+                    <td class="width20">{ORDER_FORM_EXTRAFLD_TITLE}:</td>
+                    <td>{ORDER_FORM_EXTRAFLD}</td>
+                </tr>
+                <!-- END: EXTRAFLD -->
+            </table>
+            <button type="submit" id='updOrderStatusOk'>{PHP.L.Submit}</button>
+        </form>
+        <!-- ENDIF -->
+
         <p>&nbsp;</p>
         <table class="cells paddingtop10" >
             <tr>

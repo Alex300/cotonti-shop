@@ -216,12 +216,12 @@ class OrderController{
 	}
     
     /**
-     * Создание редактирование заказа
+     * Редактирование заказа
      * @return string
      * @todo Мультипродавец
      */
     public function editAction(){
-        global $adminpath, $cfg,  $L, $cot_plugins, $usr, $sys;
+        global $adminpath, $cfg,  $L, $cot_plugins, $usr, $sys, $cot_extrafields, $db_shop_orders;
         
         $adminpath[] = array(cot_url('admin', array('m' => 'shop', 'n' => 'order')),
             $L['shop']['orders']);
@@ -239,9 +239,7 @@ class OrderController{
             $id = 0;
             $adminpath[] = '&nbsp;'.$L['Add'];
         }else{
-            if ($act != 'save'){
-                $order = Order::getById($id);
-            }
+            $order = Order::getById($id);
             $adminpath[] = $order->order_number." - id#:{$order->order_id} [".$L['Edit']."]";
         }
 
@@ -283,6 +281,16 @@ class OrderController{
             cot_message($L['shop']['order_updated_success']);
             cot_redirect(cot_url('admin', array('m'=>'shop', 'n'=>'order','a'=>'edit', 'id'=>$id),
                 '', true));
+        }elseif($act == 'save'){
+            // Extra fields
+            foreach ($cot_extrafields[$db_shop_orders] as $exfld){
+                $field = "order_{$exfld['field_name']}";
+                $order->{$field} = cot_import_extrafields('order'.$exfld['field_name'], $exfld, 'P', $order->{$field});
+            }
+            if (!cot_error_found()){
+                $order->save();
+                cot_message($L['shop']['order_updated_success']);
+            }
         }
 
         global $updStatusTpl;
@@ -385,6 +393,22 @@ class OrderController{
             'PAYMENT_TEXT'      => $paymentText,
             'SHIPMENT_TEXT'     => $shipmentText,
         ));
+
+        // Extra fields
+        foreach($cot_extrafields[$db_shop_orders] as $exfld) {
+            $uname = strtoupper($exfld['field_name']);
+            $field = "order_{$exfld['field_name']}";
+            $exfld_val = cot_build_extrafields('order'.$exfld['field_name'], $exfld, $order->{$field});
+            $exfld_title = isset($L['shop_'.$exfld['field_name'].'_title']) ?  $L['shop_'.$exfld['field_name'].'_title'] : $exfld['field_description'];
+
+            $tpl->assign(array(
+                'ORDER_FORM_'.$uname => $exfld_val,
+                'ORDER_FORM_'.$uname.'_TITLE' => $exfld_title,
+                'ORDER_FORM_EXTRAFLD' => $exfld_val,
+                'ORDER_FORM_EXTRAFLD_TITLE' => $exfld_title
+            ));
+            $tpl->parse('EDIT.FORM.EXTRAFLD');
+        }
 
         $tpl->parse('EDIT.FORM');
 

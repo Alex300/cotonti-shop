@@ -37,6 +37,7 @@ $extra_whitelist[$db_shop_orders] = array(
     'code' => 'shop',
     'tags' => array(
         'shop.cart.tpl' => '{ORDER_FORM_XXXXX}, {ORDER_FORM_XXXXX_TITLE}',
+        'shop.order.list.tpl' => '{LIST_ROW_XXXXX}, {LIST_ROW_XXXXX_TITLE}',
         'shop.order.details.tpl' => '{ORDER_XXXXX}, {ORDER_XXXXX_TITLE}',
         'shop.admin.order.tpl' => '{LIST_ROW_XXXXX}, {LIST_ROW_XXXXX_TITLE}, {ORDER_XXXXX}, {ORDER_XXXXX_TITLE}, {ORDER_FORM_XXXXX}, {ORDER_FORM_XXXXX_TITLE}',
     )
