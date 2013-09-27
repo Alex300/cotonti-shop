@@ -69,9 +69,9 @@ class OrderController{
 
         if(!empty($payresult)){
             if($payresult == 1){
-                cot_message('Спасибо. Ваш заказ оплачен!');
+                cot_message($L['shop']['pay_success']);
             }else{
-                cot_error('При оплате заказа произошла ошибка.');
+                cot_error($L['shop']['pay_fail']);
             }
             cot_redirect(cot_url('shop', $urlParams, '', true));
 
