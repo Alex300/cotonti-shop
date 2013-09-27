@@ -1027,6 +1027,15 @@ class Order extends ShopModelAbstract{
                 }
 
                 $orderArray['PAYMENT_TEXT']  = $orderArray['SHIPMENT_TEXT'] = '';
+
+
+                $urlParams = array('m'=>'order', 'order_number'=>$order->order_number, 'order_pass' => $order->order_pass);
+
+                $paySuccessUrl = cot_url('shop', array_merge($urlParams, array('payresult' => 1)));
+                $payFailUrl = cot_url('shop', array_merge($urlParams, array('payresult' => 2)));
+                if (!cot_url_check($paySuccessUrl)) $paySuccessUrl = $cfg['mainurl'].'/'.$paySuccessUrl;
+                if (!cot_url_check($payFailUrl)) $payFailUrl = $cfg['mainurl'].'/'.$payFailUrl;
+
                 // Тут плагины в теги PAYMENT_TEXT и SHIPMENT_TEXT могут вывести свою инфу
                 /* === Hook === */
                 foreach ($extp_main as $pl)

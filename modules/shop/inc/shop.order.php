@@ -19,6 +19,9 @@ class OrderController{
         
         $id = cot_import('id', 'G', 'INT');
         $order_number = cot_import('order_number', 'G', 'TXT');
+
+        $payresult = cot_import('payresult', 'G', 'INT');
+
         // If the user is not logged in, we will check the order number and order pass
         if($usr['id'] == 0){
             $order_pass = cot_import('order_pass', 'G', 'TXT');
@@ -45,7 +48,7 @@ class OrderController{
                 cot_redirect(cot_url('shop', 'm=order', '', true));
             }
         }
-        
+
         global $order; // для xTemlate
         $order = Order::getById($id);
         if (!$order){
@@ -60,8 +63,21 @@ class OrderController{
                 cot_redirect(cot_url('shop', 'm=order', '', true));
             }
         }
+
+        $urlParams = array('m'=>'order', 'order_number'=>$order->order_number);
+        if($usr['id'] == 0) $urlParams['order_pass'] = $order->order_pass;
+
+        if(!empty($payresult)){
+            if($payresult == 1){
+                cot_message('Спасибо. Ваш заказ оплачен!');
+            }else{
+                cot_error('При оплате заказа произошла ошибка.');
+            }
+            cot_redirect(cot_url('shop', $urlParams, '', true));
+
+        }
         // TODO Vendor
-                
+
         $sys['sublocation'] = $L['shop']['order_info'];
         $out['subtitle'] = $L['shop']['order_info'];
         $out['canonical_uri'] = cot_url('shop', array('m'=>'order', 'order_number'=>$order->order_number));
@@ -118,6 +134,12 @@ class OrderController{
         $t->parse('MAIN.PRODUCTS');
 
         $paymentText = $shipmentText = '';
+
+        $urlParams['order_pass'] = $order->order_pass;
+        $paySuccessUrl = cot_url('shop', array_merge($urlParams, array('payresult' => 1)));
+        $payFailUrl = cot_url('shop', array_merge($urlParams, array('payresult' => 2)));
+        if (!cot_url_check($paySuccessUrl)) $paySuccessUrl = $cfg['mainurl'].'/'.$paySuccessUrl;
+        if (!cot_url_check($payFailUrl)) $payFailUrl = $cfg['mainurl'].'/'.$payFailUrl;
 
         /* === Hook === */
         // Тут плагины в теги PAYMENT_TEXT и SHIPMENT_TEXT могут вывести свою инфу
