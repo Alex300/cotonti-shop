@@ -16,8 +16,13 @@ class ProductController{
     public function recalculateAction(){
         global $cfg, $usr;
 
-        $product_id = cot_import('shop_product_id', 'P', 'ARR');
-        $product_id = (int)$product_id[0];
+
+        if(is_array($_POST['shop_product_id'])){
+            $product_id = cot_import('shop_product_id', 'P', 'ARR');
+            $product_id = (int)$product_id[0];
+        }else{
+            $product_id = cot_import('shop_product_id', 'P', 'INT');
+        }
         $inVendorCurr = cot_import('vendor', 'P', 'BOL');
 
         $quantity = cot_import('quantity', 'P', 'ARR');
