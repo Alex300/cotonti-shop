@@ -354,19 +354,21 @@ class CartController{
         }
 
         // Extra fields
-        foreach($cot_extrafields[$db_shop_orders] as $exfld) {
-            $uname = strtoupper($exfld['field_name']);
-            $field = "order_{$exfld['field_name']}";
-            $exfld_val = cot_build_extrafields('order'.$exfld['field_name'], $exfld, $cart->{$field});
-            $exfld_title = isset($L['shop_'.$exfld['field_name'].'_title']) ?  $L['shop_'.$exfld['field_name'].'_title'] : $exfld['field_description'];
+        if(!empty($cot_extrafields[$db_shop_orders])){
+            foreach($cot_extrafields[$db_shop_orders] as $exfld) {
+                $uname = strtoupper($exfld['field_name']);
+                $field = "order_{$exfld['field_name']}";
+                $exfld_val = cot_build_extrafields('order'.$exfld['field_name'], $exfld, $cart->{$field});
+                $exfld_title = isset($L['shop_'.$exfld['field_name'].'_title']) ?  $L['shop_'.$exfld['field_name'].'_title'] : $exfld['field_description'];
 
-            $t->assign(array(
-                'ORDER_FORM_'.$uname => $exfld_val,
-                'ORDER_FORM_'.$uname.'_TITLE' => $exfld_title,
-                'ORDER_FORM_EXTRAFLD' => $exfld_val,
-                'ORDER_FORM_EXTRAFLD_TITLE' => $exfld_title
-            ));
-            $t->parse('MAIN.EXTRAFLD');
+                $t->assign(array(
+                    'ORDER_FORM_'.$uname => $exfld_val,
+                    'ORDER_FORM_'.$uname.'_TITLE' => $exfld_title,
+                    'ORDER_FORM_EXTRAFLD' => $exfld_val,
+                    'ORDER_FORM_EXTRAFLD_TITLE' => $exfld_title
+                ));
+                $t->parse('MAIN.EXTRAFLD');
+            }
         }
 
 

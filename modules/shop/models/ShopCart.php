@@ -553,9 +553,11 @@ class ShopCart Extends Order{
         if (isset($_POST['customer_comment'])) $this->order_customer_note = cot_import('customer_comment', 'P', 'TXT');
 
         // Extra fields
-        foreach ($cot_extrafields[$db_shop_orders] as $exfld){
-            $field = "order_{$exfld['field_name']}";
-            $this->{$field} = cot_import_extrafields('order'.$exfld['field_name'], $exfld, 'P', $this->{$field});
+        if(!empty($cot_extrafields[$db_shop_orders])){
+            foreach ($cot_extrafields[$db_shop_orders] as $exfld){
+                $field = "order_{$exfld['field_name']}";
+                $this->{$field} = cot_import_extrafields('order'.$exfld['field_name'], $exfld, 'P', $this->{$field});
+            }
         }
 
 
