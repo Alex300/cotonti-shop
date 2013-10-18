@@ -205,6 +205,76 @@ class calculationHelper {
     }
 
     /**
+     * Расчитать базовую цену
+     * @param array $product
+     * @return bool|float|mixed
+     */
+    public function calculateCostPrice($product){
+        global $cfg;
+        $this->revert = true;
+
+        if (!$product) return false;
+        // Если каких-то данных не хватает - выбрать их из БД (vendorId)
+        //$productAdapter->getProductById($product['id']);
+
+        if (!empty($product['price'])) {
+            $this->productCurrency = $product['price']['curr_id'];
+            $this->product_tax_id = $product['price']['tax_id'];
+            $this->product_discount_id = $product['price']['discount_id'];
+        } else {
+            //'cost Price empty, if child, everything okey, this is just a dev note'
+            return false;
+        }
+        $this->productVendorId = !empty($product['vendor_id']) ? $product['vendor_id'] : 1;
+
+        $this->cats = array($product['page_cat']);
+
+        if($cfg['shop']['multix'] != 0 && empty($this->vendorCurrency)){
+            $this->vendorCurrency = Vendor::getCurrencyId($this->productVendorId);
+        }
+        // ???
+        if (!empty($amount)) {
+            $this->amount = $product;
+        }
+
+        //$this->setCountryState($this->_cart);
+        $this->rules['Marge'] = $this->gatherEffectingRulesForProductPrice('Marge', $this->product_marge_id);
+        $this->rules['Tax'] = $this->gatherEffectingRulesForProductPrice('Tax', $this->product_tax_id);
+        $this->rules['VatTax'] = $this->gatherEffectingRulesForProductPrice('VatTax', $this->product_tax_id);
+        $this->rules['DBTax'] = $this->gatherEffectingRulesForProductPrice('DBTax', $this->product_discount_id);
+        $this->rules['DATax'] = $this->gatherEffectingRulesForProductPrice('DATax', $this->product_discount_id);
+
+        $salesPrice = $product['_price_sales'];
+
+        $withoutVatTax = $this->roundInternal($this->executeCalculation($this->rules['VatTax'], $salesPrice));
+        $withoutVatTax = !empty($withoutVatTax) ? $withoutVatTax : $salesPrice;
+
+        $withDiscount = $this->roundInternal($this->executeCalculation($this->rules['DATax'], $withoutVatTax));
+        $withDiscount = !empty($withDiscount) ? $withDiscount : $withoutVatTax;
+
+        $withTax = $this->roundInternal($this->executeCalculation($this->rules['Tax'], $withDiscount));
+        $withTax = !empty($withTax) ? $withTax : $withDiscount;
+
+        $basePriceP = $this->roundInternal($this->executeCalculation($this->rules['DBTax'], $withTax));
+        $basePriceP = !empty($basePriceP) ? $basePriceP : $withTax;
+
+        $basePrice = $this->roundInternal($this->executeCalculation($this->rules['Marge'], $basePriceP));
+        $basePrice = !empty($basePrice) ? $basePrice : $basePriceP;
+
+        $productCurrency = CurrencyDisplay::getInstance();
+        $costprice = $productCurrency->convertCurrencyTo( $this->productCurrency, $basePrice,false);
+
+        $this->revert = false;
+
+        return $costprice;
+    }
+
+
+    public function setRevert($revert){
+        $this->revert = $revert;
+    }
+
+    /**
      * function to start the calculation, here it is for the invoice in the checkout
      * This function is partly implemented !
      *
