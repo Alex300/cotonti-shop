@@ -162,6 +162,23 @@ class Calc extends ShopModelAbstract{
       
        return $id;
     }
+
+    /**
+     * Delete Calc Rule
+     * @return bool|void
+     */
+    public function delete(){
+        global $db, $db_shop_calc_groups, $db_shop_calc_categories, $db_shop_calc_countries, $db_shop_calc_states;
+
+        // Delete links
+        $db->delete($db_shop_calc_groups, 'calc_id=?', $this->_data['calc_id']);
+        $db->delete($db_shop_calc_categories, 'calc_id=?', $this->_data['calc_id']);
+        $db->delete($db_shop_calc_countries, 'calc_id=?', $this->_data['calc_id']);
+        $db->delete($db_shop_calc_states, 'calc_id=?', $this->_data['calc_id']);
+
+        return parent::delete();
+
+    }
     
     /**
      * Соханить внешние связи (many to many)

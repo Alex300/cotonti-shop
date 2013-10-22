@@ -154,7 +154,7 @@ class CalcController{
                     'LIST_ROW_PUBLISHED' => $row->calc_published,
                     'LIST_ROW_PUBLISHED_TITLE' => ($row->calc_published > 0) ? $L['Yes'] : $L['No'],
                      // TODO Текст подтверждения
-                    'LIST_ROW_DELETE_URL' => cot_confirm_url(cot_url('admin', 'm=shop&n=calc&a=del&id='.
+                    'LIST_ROW_DELETE_URL' => cot_confirm_url(cot_url('admin', 'm=shop&n=calc&a=delete&cid[]='.
                             $row->calc_id.'&'.cot_xg()), 'shop', ''),
                 ));
 
@@ -313,6 +313,38 @@ class CalcController{
         ));
         $t->parse('EDIT');
         return $t->text('EDIT');
+    }
+
+    public function deleteAction(){
+        global $L;
+
+        if(empty($_GET['cid'])) cot_redirect(cot_url('admin', array('m'=>'shop', 'n'=>'calc'), '', true));
+
+        if(is_array($_GET['cid'])){
+            $ids = cot_import('cid', 'G', 'ARR');
+        }else{
+            $ids = cot_import('cid', 'G', 'INT');
+            $ids = array($ids);
+        }
+
+        $cnt = 0;
+        foreach($ids as $id){
+            $id = (int)$id;
+            if(!$id) continue;
+
+            $calc = Calc::getById($id);
+            if(!$calc) continue;
+
+            $title = $calc->calc_title;
+            if($calc->delete()){
+                cot_message($L['Deleted']." «{$title}»");
+            }
+
+        }
+
+        cot_redirect(cot_url('admin', array('m'=>'shop', 'n'=>'calc'), '', true));
+
+        return '';
     }
 
 }
