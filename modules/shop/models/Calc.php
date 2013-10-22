@@ -228,7 +228,7 @@ class Calc extends ShopModelAbstract{
      * @return Calc[]
      */
     public static function getRule($kind){
-        global $db, $db_shop_calcs, $sys;
+        global $db, $sys;
         
         if (empty($kind)) return false;
         
@@ -236,17 +236,14 @@ class Calc extends ShopModelAbstract{
         
 		$_nullDate	= date('Y-m-d H:i:s', 0);
 		$_now			= date('Y-m-d H:i:s', $sys['now']);
-        
-		$q = "SELECT * FROM `$db_shop_calcs` WHERE calc_kind IN ('".implode("','", $kind)."')
-            AND ( calc_publish_up=".$db->quote($_nullDate)." OR calc_publish_up <= ".$db->quote($_now)." )
-			AND ( calc_publish_down =".$db->quote($_nullDate)." OR calc_publish_down >= ".$db->quote($_now)." )";
 
+        $cond = array(
+            array('calc_kind', $kind),
+            array('SQL', "calc_publish_up=".$db->quote($_nullDate)." OR calc_publish_up <= ".$db->quote($_now)),
+            array('SQL', "calc_publish_down =".$db->quote($_nullDate)." OR calc_publish_down >= ".$db->quote($_now)),
+        );
+        $data = Calc::find($cond);
 
-		$sql = $db->query($q);
-		$data = $sql->fetchAll(PDO::FETCH_CLASS, 'Calc');
-//		if (!$data) {
-//   			$data = new stdClass();
-//  		}
   		return $data;
 	}
     

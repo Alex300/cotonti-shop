@@ -65,11 +65,13 @@ if (inShopCat($pag['page_cat'])){
         '-1' => $L['shop']['product_tax_none'],
         '0'  => $L['shop']['product_tax_no_special']
     );
-    foreach ($taxes as $tax) {
-        $taxRates[$tax->calc_id] = $tax->calc_title;
+    if(!empty($taxes)){
+        foreach ($taxes as $tax) {
+            $taxRates[$tax->calc_id] = $tax->calc_title;
+        }
     }
-    if(!isset($pag['_price_tax_id'])){
-        $pag['_price_tax_id'] = 0;
+    if(!isset($pag['price']['tax_id'])){
+        $pag['price']['tax_id'] = 0;
     }
     
     // Список скидок
@@ -78,10 +80,11 @@ if (inShopCat($pag['page_cat'])){
         '-1' => $L['shop']['product_tax_none'],
         '0'  => $L['shop']['product_tax_no_special']
     );
-    foreach ($discounts as $discount) {
-        $discountrates[$discount->calc_id] = $discount->calc_title;
+    if(!empty($discounts)){
+        foreach ($discounts as $discount) {
+            $discountrates[$discount->calc_id] = $discount->calc_title;
+        }
     }
-
     if(!isset($pag['price']['discount_id'])){
         $pag['price']['discount_id'] = 0;
     }
