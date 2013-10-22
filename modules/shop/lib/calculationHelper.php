@@ -904,12 +904,13 @@ class calculationHelper {
         if(empty($this->allrules[$this->productVendorId][$entrypoint])){
             return $testedRules;
         }
+        /** @var Calc[] $allRules */
         $allRules = $this->allrules[$this->productVendorId][$entrypoint];
 
         //Cant be done with Leftjoin afaik, because both conditions could be arrays.
         foreach ($allRules as $i => $rule) {
             if(!empty($id)){
-                if($rule['calc_id'] == $id){
+                if($rule->calc_id == $id){
                     $testedRules[] = $rule;
                 }
                 continue;
