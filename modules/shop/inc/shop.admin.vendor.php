@@ -83,7 +83,7 @@ class VendorController{
         
         $tpl = new XTemplate(cot_tplfile('shop.admin.vendor'));
         
-        if (!$item->curr_id)  $item->curr_id = $cfg["shop"]['default_currency'];
+        //if (!$item->curr_id)  $item->curr_id = $cfg["shop"]['default_currency']; // сбивает с толку
         if (!$item->vendor_acc_currencies || count($item->vendor_acc_currencies) == 0){
             $item->vendor_acc_currencies = array($cfg["shop"]['default_currency']);
         }
@@ -94,7 +94,7 @@ class VendorController{
             'FORM_DESC' => cot_inputbox('text', 'rdesc', $item->vendor_desc, array('size' => '64',
                 'maxlength' => '255')),
             'FORM_CURRENCY' => cot_selectbox($item->curr_id, 'rvendor_currency',
-               array_keys($currencies), array_values($currencies), false),
+               array_keys($currencies), array_values($currencies)),
             'FORM_ACC_CURRENCIES' => cot_selectbox($item->vendor_acc_currencies, 'rvendor_acc_currencies[]',
                array_keys($currencies), array_values($currencies), false, array('size'=>'10', 'multiple'=>'multiple')),
 //            'FORM_PUBLISHED' => cot_radiobox( isset($item['paym_published']) ? $item['paym_published'] : 1,
