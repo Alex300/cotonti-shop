@@ -185,7 +185,7 @@ class ProductController{
      * Массовое сохранение товаров
      * @return string 
      */
-    public function save(){
+    public function saveAction(){
         global $db_pages, $db, $L, $cache, $structure, $cfg, $db_structure, $sys;
 
         $pagDatas = cot_import('s', 'P', 'ARR');

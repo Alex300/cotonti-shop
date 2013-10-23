@@ -9,6 +9,8 @@
  */
 defined('COT_CODE') or die('Wrong URL.');
 
+if(!function_exists('cot_import_extrafields')) require_once cot_incfile('extrafields', 'core');
+
 /**
  * Model class for the userfields
  * Поля заполняемые пользователем, спецефичные для магазина (реквизиты, адреса доставки и т.п.)

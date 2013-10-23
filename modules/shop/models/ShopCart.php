@@ -6,10 +6,11 @@
  * @subpackage cart
  * @author Alex
  * @copyright http://portal30.ru
- * @todo orderExtra Felds
+ * @todo orderExtra Fields
  */
 defined('COT_CODE') or die('Wrong URL.');
 
+if(!function_exists('cot_import_extrafields')) require_once cot_incfile('extrafields', 'core');
 // $_SESSION['__shop']['cart'] - сессия корзины
 
 /**

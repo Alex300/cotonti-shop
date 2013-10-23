@@ -473,7 +473,7 @@ class Product extends ShopModelAbstract{
         $withCalc = true;
 
         $where_state = $usr['isadmin'] ? '1' : "`".self::$_table_name."`.page_ownerid = {$usr['id']}";
-        $where['state'] = "(`".self::$_table_name."`.page_state=0 OR `".self::$_table_name."`.page_state=2 AND $where_state)";
+        $where['state'] = "(`".self::$_table_name."`.page_state=0 OR (`".self::$_table_name."`.page_state=2 AND $where_state))";
         $where['cat'] = "(`".self::$_table_name."`.page_cat IN (".implode(', ', self::quote($shopCats))."))";
 
         if ($order != ''){
@@ -506,6 +506,8 @@ class Product extends ShopModelAbstract{
             LEFT JOIN $db_structure as cat ON cat.structure_code=`".self::$_table_name."`.page_cat AND cat.structure_area='page'
             $where $order $limit";
 
+
+        
         $res = $db->query($sql, $params_cond);
         if($res->rowCount() == 0) return false;
 

@@ -38,6 +38,7 @@ class ProductController{
             $quantity += $cart->products[$product_id]->prod_quantity;
         }
 
+        list($usr['auth_read'], $usr['auth_write'], $usr['isadmin']) = cot_auth('page', 'any');
         $product = Product::getById($product_id);
 
         $prices = $product->getPrices($quantity);
