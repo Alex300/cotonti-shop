@@ -13,14 +13,16 @@ jQuery(document).ready(function($) {
             close : (function (){
                 $('#price_'+prodId).fadeTo("fast", 0.3);
                 // 'vendor': 1 - отобразить цены в валюте продавца
-                $.post("/index.php?e=shop&m=product&a=recalculate", {'shop_product_id': prodId, 'vendor': 1, 'x' : '{PHP.sys.xk}'},
+                $.post("/index.php?e=shop&m=product&a=recalculate", { 'shop_product_id': prodId, 'vendor': 1, 'x' : '{PHP.sys.xk}' },
                     function(datas, textStatus) {
                         // refresh price
-                        $('#price_'+prodId).html(datas.basePrice);
+                        var price = datas.basePrice;
+                        if (price == '') price = '0.0';
+                        $('#price_'+prodId).html(price);
                         $('#price_'+prodId).fadeTo("fast", 1);
                     }, "json");
                 })
-            })
+            });
         return false;
 	});
 });    

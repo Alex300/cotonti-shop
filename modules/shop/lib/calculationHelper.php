@@ -623,7 +623,7 @@ class calculationHelper {
 
             foreach($product->add_prices as $key => $apr) {
                 // проверяем группы
-                if(!empty($apr['price_groups']) && count(array_intersect($apr['price_groups'], $this->_shopperGroupId))== 0 ){
+                if(!empty($apr['price_groups']) && count(array_intersect($apr['price_groups'], $this->shopperGroups))== 0 ){
                     continue;
                 }
                 // Проверяем кол-во товара:

@@ -282,8 +282,10 @@ class ProductController{
             '-1' => $L['shop']['product_tax_none'],
             '0'  => $L['shop']['product_tax_no_special']
         );
-        foreach ($taxes as $tax) {
-            $taxRates[$tax->calc_id] = $tax->calc_title;
+        if(!empty($taxes)){
+            foreach ($taxes as $tax) {
+                $taxRates[$tax->calc_id] = $tax->calc_title;
+            }
         }
 
         if(!isset($product->price['tax_id'])){
@@ -296,8 +298,10 @@ class ProductController{
             '-1' => $L['shop']['product_tax_none'],
             '0'  => $L['shop']['product_tax_no_special']
         );
-        foreach ($discounts as $discount) {
-            $discountrates[$discount->calc_id] = $discount->calc_title;
+        if(!empty($discounts)){
+            foreach ($discounts as $discount) {
+                $discountrates[$discount->calc_id] = $discount->calc_title;
+            }
         }
 
         if(!isset($product->price['discount_id'])){

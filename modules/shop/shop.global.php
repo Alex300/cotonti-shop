@@ -17,11 +17,14 @@ defined('COT_CODE') or die('Wrong URL.');
 // При обращении по старым урлам периодически не находит xTemplate
 if(!class_exists('XTemplate'))  require_once $cfg['system_dir'] . '/cotemplate.php';
 
+require_once cot_incfile('forms', 'core');
+
 // Заполнить select c производителями
 global $L;
 require_once cot_incfile('shop', 'module');
 require_once cot_langfile('shop', 'module');
 if (empty($db_pages)) require_once cot_incfile('page', 'module');
+
 
 
 $shopManufacturers = Manufacturer::getKeyValPairsList();
