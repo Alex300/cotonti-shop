@@ -366,8 +366,8 @@ class OrderItem extends ShopModelAbstract{
         static $stCache = array();
 
         if (is_null($extp_first)){
-            $extp_first = cot_getextplugins('shop.order.tags.first');
-            $extp_main = cot_getextplugins('shop.order.tags.main');
+            $extp_first = cot_getextplugins('shop.orderitem.tags.first');
+            $extp_main = cot_getextplugins('shop.orderitem.tags.main');
         }
 
         /* === Hook === */
@@ -375,8 +375,8 @@ class OrderItem extends ShopModelAbstract{
             include $pl;
         }
         /* ===== */
-        if ( is_object($item) && is_array($stCache[$item->order_item_id."_".$userType]) ) {
-            $tagsArray = $stCache[$item->order_item_id."_".$userType];
+        if ( is_object($item) && is_array($stCache[$item->oi_id."_".$userType]) ) {
+            $tagsArray = $stCache[$item->oi_id."_".$userType];
         }elseif (is_int($item) && is_array($stCache[$item."_".$userType])){
             $tagsArray = $stCache[$item."_".$userType];
 
@@ -467,7 +467,7 @@ class OrderItem extends ShopModelAbstract{
                 }
                 /* ===== */
 
-                $cacheitem && $item->order_item_id > 0 &&  $stCache[$item->order_item_id."_".$userType] = $tagsArray;
+                $cacheitem && $item->oi_id > 0 &&  $stCache[$item->oi_id."_".$userType] = $tagsArray;
             }else{
                 // Item Not Found
                 return false;
