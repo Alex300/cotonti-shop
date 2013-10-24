@@ -1023,7 +1023,7 @@ class Order extends ShopModelAbstract{
                         $temp_array[$tag.'_TITLE'] = isset($L['shop_'.$row['field_name'].'_title']) ?  $L['shop_'.$row['field_name'].'_title'] : $row['field_description'];
                         $field = "order_{$row['field_name']}";
                         $temp_array[$tag] = cot_build_extrafields_data('page', $row, $order->{$field});
-                        $tagsArray[$tag.'_VALUE'] = $order->$field;
+                        $temp_array[$tag.'_VALUE'] = $order->$field;
                     }
                 }
 
