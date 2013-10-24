@@ -887,10 +887,10 @@ class Order extends ShopModelAbstract{
         }
         /* ===== */
         if ( ($order instanceof Order) && is_array($order_cache[$order->order_id."_".$userType]) ) {
-            $orderArray = $order_cache[$order->order_id."_".$userType];
+            $temp_array = $order_cache[$order->order_id."_".$userType];
 
         }elseif (is_int($order) && is_array($order_cache[$order."_".$userType])){
-            $orderArray = $order_cache[$order."_".$userType];
+            $temp_array = $order_cache[$order."_".$userType];
 
         }else{
             if (!($order instanceof Order)){
@@ -951,7 +951,8 @@ class Order extends ShopModelAbstract{
                     $curr = CurrencyDisplay::getInstance($order->order_currency, $order->vendor_id);
                 }
 
-                $orderArray = array(
+                // $temp_array - название массива, принятое в Cotonti см. cot_generate_pagetags(), cot_generate_usertags()
+                $temp_array = array(
                     'URL' => $order_link,
                     'CREATE_DATE' => cot_date($date_format, strtotime($order->order_created_on)),
                     'CREATE_DATE_STAMP' => strtotime($order->order_created_on),
@@ -1013,20 +1014,20 @@ class Order extends ShopModelAbstract{
                     'DELETE_URL' => cot_confirm_url(cot_url('admin', 'm=shop&n=order&a=delete&id='.$order->order_id.'&'.cot_xg()), 'admin'),
                 );
                 if (cot_auth('shop', 'any', 'A')){
-                    $orderArray['PASSWORD'] = $order->order_pass;
+                    $temp_array['PASSWORD'] = $order->order_pass;
                 }
                 // Extrafields
                 if (isset($cot_extrafields[$db_shop_orders])){
                     foreach ($cot_extrafields[$db_shop_orders] as $row) {
                         $tag = mb_strtoupper($row['field_name']);
-                        $orderArray[$tag.'_TITLE'] = isset($L['shop_'.$row['field_name'].'_title']) ?  $L['shop_'.$row['field_name'].'_title'] : $row['field_description'];
+                        $temp_array[$tag.'_TITLE'] = isset($L['shop_'.$row['field_name'].'_title']) ?  $L['shop_'.$row['field_name'].'_title'] : $row['field_description'];
                         $field = "order_{$row['field_name']}";
-                        $orderArray[$tag] = cot_build_extrafields_data('page', $row, $order->{$field});
+                        $temp_array[$tag] = cot_build_extrafields_data('page', $row, $order->{$field});
                         $tagsArray[$tag.'_VALUE'] = $order->$field;
                     }
                 }
 
-                $orderArray['PAYMENT_TEXT']  = $orderArray['SHIPMENT_TEXT'] = '';
+                $temp_array['PAYMENT_TEXT']  = $temp_array['SHIPMENT_TEXT'] = '';
 
 
                 $urlParams = array('m'=>'order', 'order_number'=>$order->order_number, 'order_pass' => $order->order_pass);
@@ -1044,13 +1045,13 @@ class Order extends ShopModelAbstract{
                 }
                 /* ===== */
 
-                $cacheitem && $order_cache[$order->order_id."_".$userType] = $orderArray;
+                $cacheitem && $order_cache[$order->order_id."_".$userType] = $temp_array;
             }else{
                 // Заказ не существует
             }
         }
         $return_array = array();
-        foreach ($orderArray as $key => $val){
+        foreach ($temp_array as $key => $val){
             $return_array[$tagPrefix . $key] = $val;
         }
 
