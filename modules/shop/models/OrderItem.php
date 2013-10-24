@@ -376,9 +376,9 @@ class OrderItem extends ShopModelAbstract{
         }
         /* ===== */
         if ( is_object($item) && is_array($stCache[$item->oi_id."_".$userType]) ) {
-            $tagsArray = $stCache[$item->oi_id."_".$userType];
+            $temp_array = $stCache[$item->oi_id."_".$userType];
         }elseif (is_int($item) && is_array($stCache[$item."_".$userType])){
-            $tagsArray = $stCache[$item."_".$userType];
+            $temp_array = $stCache[$item."_".$userType];
 
         }else{
             if (!is_object($item) && $item > 0){
@@ -412,8 +412,8 @@ class OrderItem extends ShopModelAbstract{
                     $link = cot_url('page', $tmp);
                     if (!cot_url_check($link)) $link = $cfg['mainurl'].'/'.$link;
                 }
-
-                $tagsArray = array(
+                // $temp_array - название массива, принятое в Cotonti см. cot_generate_pagetags(), cot_generate_usertags()
+                $temp_array = array(
                     'ID' => $item->oi_id,
                     'PROD_ID' => $item->prod_id,
                     'TITLE' => htmlspecialchars($item->prod_title),
@@ -454,9 +454,9 @@ class OrderItem extends ShopModelAbstract{
                     {
                         $tag = mb_strtoupper($exfld['field_name']);
                         $field = 'oi_'.$exfld['field_name'];
-                        $tagsArray[$tag.'_TITLE'] = isset($L['page_'.$exfld['field_name'].'_title']) ?  $L['page_'.$exfld['field_name'].'_title'] : $exfld['field_description'];
-                        $tagsArray[$tag] = cot_build_extrafields_data('shop', $exfld, $item->$field);
-                        $tagsArray[$tag.'_VALUE'] = $item->$field;
+                        $temp_array[$tag.'_TITLE'] = isset($L['page_'.$exfld['field_name'].'_title']) ?  $L['page_'.$exfld['field_name'].'_title'] : $exfld['field_description'];
+                        $temp_array[$tag] = cot_build_extrafields_data('shop', $exfld, $item->$field);
+                        $temp_array[$tag.'_VALUE'] = $item->$field;
                     }
                 }
 
@@ -467,7 +467,7 @@ class OrderItem extends ShopModelAbstract{
                 }
                 /* ===== */
 
-                $cacheitem && $item->oi_id > 0 &&  $stCache[$item->oi_id."_".$userType] = $tagsArray;
+                $cacheitem && $item->oi_id > 0 &&  $stCache[$item->oi_id."_".$userType] = $temp_array;
             }else{
                 // Item Not Found
                 return false;
@@ -475,7 +475,7 @@ class OrderItem extends ShopModelAbstract{
 
         }
         $return_array = array();
-        foreach ($tagsArray as $key => $val){
+        foreach ($temp_array as $key => $val){
             $return_array[$tagPrefix . $key] = $val;
         }
 
