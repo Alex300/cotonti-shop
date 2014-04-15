@@ -685,6 +685,31 @@ class Product extends ShopModelAbstract{
     }
 
     /**
+     * Удаление информации о товаре
+     * @param $prod
+     * @return bool
+     */
+    public static function deleteProductInfoByPag($prod){
+        global $db, $db_shop_product_prices_gr, $db_shop_product_prices, $db_shop_waitingusers;
+
+        if (is_array($prod)) $prod = $prod['page_id'];
+        $prod = (int)$prod;
+        if (!$prod) return false;
+
+        // Удалить связи для цен товара с группами пользователей
+        $db->delete($db_shop_product_prices_gr, "price_id IN (SELECT price_id FROM $db_shop_product_prices WHERE
+            product_id={$prod})");
+
+        // Удалить цены
+        $db->delete($db_shop_product_prices, "product_id={$prod}");
+
+        // Удалить список ожидающих пользователей
+        $db->delete($db_shop_waitingusers, "product_id=$prod");
+
+        return true;
+    }
+
+    /**
      * Соханить внешние ссылки (many to many)
      * @param string $table
      * @param array $data

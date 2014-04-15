@@ -22,7 +22,7 @@ require_once cot_incfile('shop', 'module', 'resources');
  * не проверяем принадлежность страницы магазину, т.к. при страница товара ранее могла перенестись в категорию не магазина,
  * а потом удалиться
  */
-ShopProduct::deleteProductInfoByPag($id);
+Product::deleteProductInfoByPag($id);
 
 if (inShopCat($pag['page_cat'])){
 
