@@ -625,10 +625,11 @@ function shop_selectbox_taxes($name, $chosen, $attrs = array()){
         '-1' => $L['shop']['product_tax_none'],
         '0'  => $L['shop']['product_tax_no_special']
     );
-    foreach ($taxes as $tax) {
-        $taxRates[$tax->calc_id] = $tax->calc_title;
+    if(!empty($taxes)){
+        foreach ($taxes as $tax) {
+            $taxRates[$tax->calc_id] = $tax->calc_title;
+        }
     }
-
     return cot_selectbox($chosen, $name, array_keys($taxRates), array_values($taxRates), false, $attrs);
 }
 
