@@ -799,7 +799,7 @@ class CartController{
     public function ajxAddAction(){
         global $L, $cfg;
 
-        $json = null;
+        $json = new stdClass();
         $cart = ShopCart::getInstance(false);
         // Для отладки можно очистить корзину
 //        $cart->removeCartFromSession();
