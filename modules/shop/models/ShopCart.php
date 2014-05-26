@@ -287,7 +287,7 @@ class ShopCart Extends Order{
     /**
      * Save Cart
      */
-    public function save(){
+    public function save($data = NULL){
         // Сэкономим не много места в сесии
         if ($this->products) {
             foreach($this->products as $key => &$product){
