@@ -701,7 +701,7 @@ function minicart($tpl = 'shop.minicart', $cacheitem = true){
     }
 
     // на страницах редактирования/добавления не отображаем корзину
-    if (!defined('COT_ADMIN') && (!defined('COT_AJAX') || !COT_AJAX ) && !in_array($m, array('add', edit)) ){
+    if (!defined('COT_ADMIN') && (!defined('COT_AJAX') || !COT_AJAX ) && !in_array($m, array('add', 'edit')) ){
 
         // выводим мини корзину
         if ($cfg["shop"]['mCartOnShopOnly'] == 0 || ($cfg["shop"]['mCartOnShopOnly']==1 && isShop())){
