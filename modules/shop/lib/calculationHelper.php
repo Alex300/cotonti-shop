@@ -290,6 +290,8 @@ class calculationHelper {
      * @param bool $checkAutomaticSelected
      *
      * @return array
+     *
+     * @todo перенести в корзину. Имя метода в корзине такое же как и заказа Order::recalculate
      */
     public function setCheckoutPrices($cart, $checkAutomaticSelected = true) {
         $this->cart = $cart;
