@@ -232,7 +232,7 @@ class OrderUserInfo extends ShopModelAbstract{
      * Save data
      * @return int id of saved record
      */
-    public function save(){
+    public function save($data = null){
 
         $itemId = $this->_data['oi_id'];
         if(empty($this->oui_address_type_title)){

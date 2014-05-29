@@ -12,7 +12,7 @@ if (!defined('DS')) define('DS', DIRECTORY_SEPARATOR);
 
 // Disable messages "Strict standards"... for now
 // @todo fix all "Strict standards"
-error_reporting(error_reporting() ^ E_STRICT);
+error_reporting(error_reporting() & ~E_STRICT);
 
 require_once cot_langfile('shop', 'module');
 require_once cot_incfile('shop', 'module', 'resources');

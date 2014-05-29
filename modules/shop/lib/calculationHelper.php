@@ -128,7 +128,7 @@ class calculationHelper {
      * Получить текущий экземпляр calculationHelper
      * @return calculationHelper
      */
-    public function getInstance() {
+    public static function getInstance() {
         global $sys;
 
         if (!is_object(self::$_instance)) {
