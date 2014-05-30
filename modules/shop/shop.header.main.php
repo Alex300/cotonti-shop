@@ -67,14 +67,14 @@ if (!defined('COT_ADMIN') && (!defined('COT_AJAX') || !COT_AJAX ) && $m != 'edit
 }
 
 // Конфигурация модуля Shop
-if ($env['location'] == 'administration' && $m == 'config' && $n == 'edit' && $o == 'module' && $p == 'shop'){
+if (defined('COT_ADMIN') && $m == 'config' && $n == 'edit' && $o == 'module' && $p == 'shop'){
     cot_rc_link_file($cfg['modules_dir'].'/shop/js/shop_dialog.js');
     cot_rc_link_file($cfg['modules_dir'].'/shop/js/shop.config.js');
 }
 //var_dump($env['location']);
 
 // Правильные селекты в админке
-if ($env['location'] == 'administration' && $m == 'shop' && !in_array($n,array('order'))){
+if (defined('COT_ADMIN') && $m == 'shop' && !in_array($n, array('order'))){
     cot_rc_link_file($cfg['modules_dir'].'/shop/js/select2/select2.min.js');
     cot_rc_link_file($cfg['modules_dir'].'/shop/js/select2/select2.css');
     cot_rc_embed_footer(
