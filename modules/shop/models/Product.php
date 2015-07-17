@@ -485,7 +485,7 @@ class Product extends ShopModelAbstract{
         }else{
             $order = "ORDER BY `".self::$_table_name."`.`page_id` ASC";
         }
-        $limit = ($limit) ? "LIMIT $offset, $limit" : '';
+        $limit = ($limit) ? "LIMIT $limit OFFSET $offset" : '';
 
         // под php 5.2 лучше класс указывать явно а не self::parseConditions($conditions);
         list($where_cond, $params_cond) = Product::parseConditions($conditions);
