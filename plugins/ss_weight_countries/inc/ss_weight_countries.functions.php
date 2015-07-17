@@ -42,6 +42,7 @@ function sswc_checkConditions($cart, $method) {
 
     // probably did not gave his BT:ST address
     if (empty($address)) {
+        $address = new OrderUserInfo;
         $address->oui_zip = 0;
         $address->oui_country = '00';
     }

@@ -115,7 +115,6 @@ class ShopCart Extends Order{
      * Глобальная точка доступа к единственнгому экземпляру корзины
      * @param bool $setCart
      * @param array $options
-     * @internal param array $cart the cart to store in the session
      * @return \ShopCart
      */
     public static function getInstance($setCart = true, $options = array()) {

@@ -811,9 +811,17 @@ class CartController{
 
             $cart_link = cot_url('shop', 'm=cart', '', true);
 
-            $product_ids = cot_import('shop_product_id', 'P', 'ARR');
-            $quantities = cot_import('quantity', 'P', 'ARR');
+            $product_ids = null;
+            if(isset($_POST['shop_product_id'])) {
+                if(is_array($_POST['shop_product_id'])) {
+                    $product_ids = cot_import('shop_product_id', 'P', 'ARR');
+                    $quantities = cot_import('quantity', 'P', 'ARR');
 
+                } else {
+                    $product_ids = array(cot_import('shop_product_id', 'P', 'INT'));
+                    $quantities  = array(cot_import('quantity', 'P', 'NUM'));
+                }
+            }
 
             $errorMsg = array( 0 => $L['shop']['cart_product_added']);
             if (empty($product_ids)) {
