@@ -400,6 +400,13 @@ class CartController{
                 'USERS_AUTH_REMEMBER' => $cfg['forcerememberme'] ? $R['form_guest_remember_forced'] : $R['form_guest_remember']
            ));
         }
+
+        /* === Hook === */
+        foreach (cot_getextplugins('shop.cart.tags') as $pl) {
+            include $pl;
+        }
+        /* ===== */
+
         // Error and message handling
         cot_display_messages($t);
         
