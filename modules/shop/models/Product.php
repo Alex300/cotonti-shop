@@ -174,10 +174,10 @@ class Product extends ShopModelAbstract{
                 if($productsleft>0 and $stockhandle='disableadd'){
                     $quantity = $productsleft;
                     $errorMsg = sprintf($L['shop']['product_out_of_quantity'], $quantity);
-                    $this->setError($errorMsg);
+//                    $this->setError($errorMsg);
                 } else {
                     $errorMsg = $L['shop']['product_out_of_stock'];
-                    $this->setError($errorMsg); // Private error retrieved with getError is used only by addJS, so only the latest is fine
+//                    $this->setError($errorMsg); // Private error retrieved with getError is used only by addJS, so only the latest is fine
                     return false;
                 }
             }
@@ -195,12 +195,12 @@ class Product extends ShopModelAbstract{
 
         if ($min != 0 && $quantity < $min) {
             $errorMsg = sprintf($L['shop']['cart_min_order'], $min);
-            $this->setError($errorMsg);
+//            $this->setError($errorMsg);
             return false;
         }
         if ($max != 0 && $quantity > $max) {
             $errorMsg = sprintf($L['shop']['cart_max_order'], $max);
-            $this->setError($errorMsg);
+//            $this->setError($errorMsg);
             return false;
         }
 
@@ -214,7 +214,7 @@ class Product extends ShopModelAbstract{
                     $unit = '('.$this->_data["page_{$cfg["shop"]['pextf_unit']}"].')';
                 }
                 $errorMsg = sprintf($L['shop']['product_out_of_pack'], $quantity, $inPack, $unit);
-                $this->setError($errorMsg);
+//                $this->setError($errorMsg);
             }
         }else{
             // Если не продаем упаковками, то проверяем шаг
