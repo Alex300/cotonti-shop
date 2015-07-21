@@ -109,7 +109,7 @@
         <td colspan="5" class="textleft">
             {ORDER_SHIPMENT_TITLE}
             <!-- IF {ORDER_SHIPMENT_DESC} --><em class="grey">({ORDER_SHIPMENT_DESC})</em><!-- ENDIF -->
-           <!-- IF !{AUTO_SELECTED_SHIPMENT} -->
+           <!-- IF {AUTO_SELECTED_SHIPMENT} == 0 -->
             <br />
             <a id="select_shipment" href="{PHP|cot_url('shop', 'm=cart&a=edit_shipment')}">{ORDER_SELECT_SHIPMENT_TEXT}</a>
             <!-- ENDIF -->
@@ -125,7 +125,7 @@
         <td colspan="5" class="textleft">
             {ORDER_PAYMENT_TITLE}
             <!-- IF {ORDER_PAYMENT_DESC} --><em class="grey">({ORDER_PAYMENT_DESC})</em><!-- ENDIF -->
-            <!-- IF !{AUTO_SELECTED_PAYMENT} -->
+            <!-- IF {AUTO_SELECTED_PAYMENT} == 0 -->
                 <br />
                 <a id="select_payment" href="{PHP|cot_url('shop', 'm=cart&a=edit_payment')}">{ORDER_SELECT_PAYMENT_TEXT}</a>
             <!-- ENDIF -->

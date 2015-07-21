@@ -338,8 +338,8 @@ class CartController{
         $t->assign(ShopCart::generateTags($cart, 'ORDER_', 'shopper', false));
         $t->assign(array(
             'ORDER_TOTAL_IN_PAYMENT_CURRENCY' => $totalInPaymentCurrency,
-            'AUTO_SELECTED_SHIPMENT' => $cart->automaticSelectedShipment,
-            'AUTO_SELECTED_PAYMENT'  => $cart->automaticSelectedPayment,
+            'AUTO_SELECTED_SHIPMENT' => ($cart->automaticSelectedShipment) ? 1 : 0,
+            'AUTO_SELECTED_PAYMENT'  => ($cart->automaticSelectedPayment)  ? 1 : 0,
             'ORDER_SELECT_SHIPMENT_TEXT' => ($cart->shipm_id) ? $L['shop']['cart_change_shipping'] :
                     $L['shop']['cart_edit_shipping'],
             'ORDER_SELECT_PAYMENT_TEXT'  => ($cart->paym_id) ? $L['shop']['cart_change_payment'] :
