@@ -904,7 +904,7 @@ class CartController{
             ));
         $data->cart_showUrl = cot_url('shop', 'm=cart'.$taskRoute);
         $data->cart_showTitle = $linkName;
-        $data->billTotal = $L['shop']['cart_total'].': <strong>' . $data->billTotal . '</strong>';
+        $data->billTotal = '<span class="total-title">'.$L['shop']['cart_total'].': </span><strong>' . $data->billTotal . '</strong>';
 
         echo json_encode($data);
         exit();
