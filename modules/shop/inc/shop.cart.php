@@ -67,6 +67,7 @@ class CartController{
             $out['subtitle'] = $L['shop']['order_confirm_mnu'];
             $out['canonical_uri'] = cot_url('shop', array('m'=>'cart'));
             $checkout_task = 'confirm';
+
         } else {
             $crumbs[] = $L['shop']['cart_overview'];
             $sys['sublocation'] = $L['shop']['cart_overview'];
@@ -432,6 +433,8 @@ class CartController{
                 cot_redirect(cot_url('shop', array('m'=>'cart'), '', true));
             }
         }
+
+        cot_redirect(cot_url('shop', array('m'=>'cart'), '', true));
     }
     
     /**

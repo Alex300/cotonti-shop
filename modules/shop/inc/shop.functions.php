@@ -321,6 +321,56 @@ function shop_nearMultiple($num, $k){
 }
 
 /**
+ * Минимальная сумма для заказа
+ *
+ * @param int  $uid             id - пользователя
+ * @param bool $inShopCurrency  результат в валюте продавца (или покупателя)
+ * @return float
+ */
+function shop_minPurchaseValue($uid = 0, $inShopCurrency = false) {
+    $uid = (int)$uid;
+    if(empty($uid)) $uid = cot::$usr['id'];
+
+    static $stCache = array();
+
+    if(isset($stCache[$uid])) {
+        $minPurchase = $stCache[$uid];
+
+    } else {
+
+        $sqlWhere = "grp_id=" . COT_GROUP_GUESTS;
+        if ($uid > 0) {
+            $sqlWhere = "grp_id IN (SELECT gru_groupid FROM " . cot::$db->groups_users . " WHERE gru_userid={$uid}) AND grp_disabled=0";
+        }
+
+        $sql = "SELECT grp_shop_min_purchase FROM " . cot::$db->groups . " WHERE " . $sqlWhere;
+        $purchase = cot::$db->query($sql)->fetchAll(PDO::FETCH_COLUMN);
+
+        if (empty($purchase)) {
+            $stCache[$uid] = 0;
+            return 0;
+        }
+
+        $minPurchase = min($purchase);
+        $stCache[$uid] = $minPurchase;
+    }
+
+    if($minPurchase == 0) {
+        return 0;
+    }
+
+    if($inShopCurrency) return $minPurchase;
+
+    // Переведем сумму в валюту покупателя
+    $currency = CurrencyDisplay::getInstance();
+
+    $currencyId = $currency->getCurrencyDisplay();
+    $ret = $currency->convertCurrencyTo($currencyId, $minPurchase, false);
+
+    return $ret;
+}
+
+/**
  * Рендерит настройки плагинов
  */
 function shop_renderPlgConfig($plg, $plgConfig, $t, $block = 'MAIN.EDIT'){

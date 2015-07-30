@@ -1025,7 +1025,7 @@ class calculationHelper {
         // check if there is only one possible shipment method
 
         $automaticSelectedShipment =   $cart->CheckAutomaticSelectedShipment($this->cartPrices, $checkAutomaticSelected);
-        if ($automaticSelectedShipment) $ship_id=$cart->shipm_id;
+        if ($automaticSelectedShipment) $ship_id = $cart->shipm_id;
         if (empty($ship_id)) return;
 
         // Handling shipment plugins

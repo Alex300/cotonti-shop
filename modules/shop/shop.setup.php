@@ -3,11 +3,11 @@
 [BEGIN_COT_EXT]
 Code=shop
 Name=Shop
-Description=RC e-shop for Cotonti Siena
-Version=1.0.0
-Date=2013-08-11
+Description=E-shop for Cotonti Siena
+Version=1.0.1
+Date=2015-07-29
 Author=Alex
-Copyright=(с) 2012-2013 Portal30 Studio http://portal30.ru
+Copyright=(с) 2012-2015 Portal30 Studio http://portal30.ru
 Auth_guests=R
 Lock_guests=12345A
 Auth_members=RW
@@ -106,10 +106,12 @@ sunitPrice=a9:string::1|1|2:Standarized price
 ==================== */
 
 /**
- * module shop for Cotonti Siena
+ * Shop module for Cotonti Siena
  * 
- * @package shop
- * @author Alex
- * @copyright (с) 2012-2013 Portal30 Studio http://portal30.ru (Begin: 2012-01-16)
+ * @package Shop
+ * @author  Kalnov Alexey    <kalnovalexey@yandex.ru>
+ * @copyright (с) 2012-2015 Portal30 Studio http://portal30.ru (Begin: 2012-01-16)
+ *
+ * v.1.0.1 Добавлена возможность для каждой группы пользователей установить минимальную сумму заказа
  */
 defined('COT_CODE') or die('Wrong URL');

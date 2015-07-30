@@ -29,4 +29,12 @@ cot_extrafield_remove($db_shop_shop_userinfo, 'country');
 cot_extrafield_remove($db_shop_shop_userinfo, 'phone');
 //cot_extrafield_remove($db_shop_shop_userinfo, 'phone_2');
 // remove table
-$db->query("DROP TABLE IF EXISTS `$db_shop_shop_userinfo");
+cot::$db->query("DROP TABLE IF EXISTS `$db_shop_shop_userinfo`");
+
+
+// Remove Files columns from groups table
+$dbres = cot::$db->query("SHOW COLUMNS FROM `".cot::$db->groups."` WHERE `Field` = 'grp_shop_min_purchase'");
+if ($dbres->rowCount() == 1) {
+    cot::$db->query("ALTER TABLE `".cot::$db->groups."` DROP COLUMN `grp_shop_min_purchase`");
+}
+$dbres->closeCursor();

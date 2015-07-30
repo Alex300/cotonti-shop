@@ -2,6 +2,7 @@
 /**
  * module shop for Cotonti Siena
  * Install
+ *
  * @package shop
  * @author Alex
  */
@@ -14,11 +15,11 @@ require_once cot_incfile('shop', 'module');
 // Установка необходимых данных
 
 // Устанавливаем валюты
-$dbres = $db->query("SELECT COUNT(*) FROM `$db_shop_currencies`");
+$dbres = cot::$db->query("SELECT COUNT(*) FROM `$db_shop_currencies`");
 if ($dbres->fetchColumn() == 0){
     $sqlFName = "$path/setup/$name.install.currencies.sql";
 	// Run SQL install script
-    $sql_err = $db->runScript( file_get_contents($sqlFName) );
+    $sql_err = cot::$db->runScript( file_get_contents($sqlFName) );
     if (empty($sql_err)){
         cot_message(cot_rc('ext_executed_sql', array('ret' => 'Currencies: OK')));
     }else{
@@ -28,7 +29,7 @@ if ($dbres->fetchColumn() == 0){
 }
 
 // Устанавливаем Статусы заказов
-$dbres = $db->query("SELECT COUNT(*) FROM `$db_shop_order_status`");
+$dbres = cot::$db->query("SELECT COUNT(*) FROM `$db_shop_order_status`");
 if ($dbres->fetchColumn() == 0){
     $shopSQl = "
     --
@@ -42,7 +43,7 @@ if ($dbres->fetchColumn() == 0){
     ('X', 'Cancelled', '', 'A',4, 1, 1),
     ('R', 'Refunded', '', 'A',5, 1, 1),
     ('S', 'Shipped', '', 'O',6, 1, 1);";
-    $db->query($shopSQl);
+    cot::$db->query($shopSQl);
 }
 
 if(!function_exists('cot_extrafield_add')){
@@ -66,3 +67,11 @@ cot_extrafield_add($db_shop_shop_userinfo, 'phone', 'input',  '', '', '', true);
 //cot_extrafield_add($db_shop_shop_userinfo, 'phone_2', 'input');
 
 // Теже самые поля для $db_shop_order_userinfo устанавливаются по-умолчанию (не являются экстраполями)
+
+
+// Add groups fields if missing
+$dbres = cot::$db->query("SHOW COLUMNS FROM `".cot::$db->groups."` WHERE `Field` = 'grp_shop_min_purchase'");
+if ($dbres->rowCount() == 0) {
+    cot::$db->query("ALTER TABLE `".cot::$db->groups."` ADD COLUMN `grp_shop_min_purchase` DOUBLE DEFAULT 0");
+}
+$dbres->closeCursor();

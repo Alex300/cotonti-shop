@@ -5,12 +5,13 @@ defined('COT_CODE') or die('Wrong URL.');
  * @package shop
  * @subpackage Users
  *
- * @property int $oui_id;
- * @property int $order_id;
- * @property int $user_id;
- * @property int $ui_id
+ * @property int    $oui_id;
+ * @property int    $order_id;
+ * @property int    $user_id;
+ * @property int    $ui_id
  * @property string	$oui_address_type
  * @property string	$oui_address_type_title
+ * @property string	oui_company
  * @property bool   $agreed
  * @property string	$oui_email
  * @property string	$oui_lastname
@@ -18,7 +19,11 @@ defined('COT_CODE') or die('Wrong URL.');
  * @property string	$oui_middlename
  * @property string	$oui_zip            Почтовый индекс
  * @property string	$oui_country
+ * @property string	$oui_address
+ * @property int	$oui_city
+ * @property string $oui_city_name
  * @property int	$oui_region
+ * @property string	$oui_region_name
  * @property string	$oui_phone
  *
  * @method static OrderUserInfo getById(int $pk)

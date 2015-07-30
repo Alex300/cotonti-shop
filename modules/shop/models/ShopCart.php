@@ -374,10 +374,11 @@ class ShopCart Extends Order{
             $tmp = array_shift($ships);
             $shipmentmethod_id = (int)$tmp->shipm_id;
 
-            if ($nbShipment==1 && $shipmentmethod_id) {
+            if ($nbShipment == 1 && $shipmentmethod_id) {
                 $this->automaticSelectedShipment=true;
                 $this->shipmentMethod = $shipmentmethod_id;
                 return true;
+
             } else {
                 $this->automaticSelectedShipment=false;
                 $this->save();
@@ -417,10 +418,11 @@ class ShopCart Extends Order{
             $tmp = array_shift($pays);
             $paymentmethod_id = (int)$tmp->paym_id;
 
-            if ($nbPayment==1 && $paymentmethod_id) {
+            if ($nbPayment == 1 && $paymentmethod_id) {
                 $this->automaticSelectedPayment=true;
                 $this->paymentMethod = $paymentmethod_id;
                 return true;
+
             } else {
                 $this->automaticSelectedPayment=false;
                 $this->save();
@@ -526,6 +528,7 @@ class ShopCart Extends Order{
             $this->save();
             if ($redirectMsg) cot_message($redirectMsg, 'warning');
             cot_redirect($relUrl);
+
         } else {
             $this->save();
             return false;
@@ -573,6 +576,7 @@ class ShopCart Extends Order{
             $cat = $cat[0];
             $continue_link = cot_url('page', array('c'=>$cat), '', true);
             return $this->redirecter($continue_link, $L['shop']['cart_no_product']);
+
         } else {
             foreach ($this->products as $item) {
                 $redirectMsg = '';
@@ -585,7 +589,13 @@ class ShopCart Extends Order{
 
         // Check if a minimun purchase value is set
         if (($redirectMsg = $this->checkPurchaseValue()) != null) {
-            return $this->redirecter(cot_url('shop', 'm=cart', '', true) , $redirectMsg);
+
+            $this->redirecter(cot_url('shop', 'm=cart', '', true));
+
+            // Всегда выводим это предупреждение
+            cot_message($redirectMsg, 'warning');
+
+            return false;
         }
 
         //But we check the data again to be sure
@@ -705,14 +715,24 @@ class ShopCart Extends Order{
     }
 
     /**
-     * Проверка на минимальную сумму заказа (из нстроек продавца)
+     * Проверка на минимальную сумму заказа (из настроек продавца и группы пользователя)
      * Check if a minimum purchase value for this order has been set, and if so, if the current
      * value is equal or hight than that value.
-     * @return An error message when a minimum value was set that was not eached, null otherwise
-     * @todo - это заглушка. Дописать
+     *
+     * @return null|string An error message when a minimum value was set that was not eached, null otherwise
+     *
+     * @todo - Можно еще использовать настройки продавца
      */
-    private function checkPurchaseValue() {
-        global $cfg;
+    public function checkPurchaseValue() {
+        // В валюте магазина
+        $minPurchase = shop_minPurchaseValue(0, true);
+
+        if($minPurchase > $this->order_salesPrice) {
+            $currency = CurrencyDisplay::getInstance();
+
+            // В валюте покупателя
+            return cot::$L['shop']['order_min_total'].' '.$currency->priceDisplay($minPurchase);
+        }
 
         return null;
     }
