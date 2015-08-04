@@ -699,7 +699,7 @@ class ShopCart Extends Order{
             }
         }
 
-        if($cfg["shop"]['oncheckout_only_registered'] && $usr['id']==0) {
+        if($cfg["shop"]['oncheckout_only_registered'] && $usr['id'] == 0) {
             return $this->redirecter(cot_url('shop', array('m'=>'user', 'a'=>'editaddress',
                                                            'addrtype'=>'BT'), '', true) , $L['shop']['cart_only_registered']);
         }

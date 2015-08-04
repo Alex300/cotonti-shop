@@ -350,7 +350,7 @@ class CartController{
         $t->parse('MAIN.PRODUCTS');
 
         $checkout_link_html = '';
-        if (!$cfg["shop"]['use_as_catalog']) {
+        if (!$cfg['shop']['use_as_catalog']) {
             $checkout_link_html = cot_rc('shop_btn_order_confirm');
         }
 
@@ -427,7 +427,14 @@ class CartController{
         $cart = ShopCart::getInstance();
         if ($cart && !$cfg["shop"]['use_as_catalog']) {
             if ($cart->checkoutData(true)) {
-                //This is dangerous, we may add it as option, direclty calling the confirm is in most countries illegal and
+
+                /* === Hook === */
+                foreach (cot_getextplugins('shop.cart.checkout.done') as $pl) {
+                    include $pl;
+                }
+                /* ===== */
+
+                //This is dangerous, we may add it as option, directly calling the confirm is in most countries illegal and
                 // can lead to confusion.
                 cot_message($L['shop']['cart_checkout_done_confirm_order']);
                 cot_redirect(cot_url('shop', array('m'=>'cart'), '', true));
