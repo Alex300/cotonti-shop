@@ -272,7 +272,11 @@ var shop_userInfo = '';
 					});
 					mod.find(".total").html(datas.billTotal);
 					mod.find(".show_cart").html(datas.cart_show);
-				}
+
+                    mod.addClass('shop-cart-full').removeClass('shop-cart-empty');
+				} else {
+                    mod.removeClass('shop-cart-full').addClass('shop-cart-empty');
+                }
 				mod.find(".total_products").html(datas.totalProductTxt).fadeTo('fast', 1);
                 mod.find(".shop_cart_products").fadeTo('fast', 1).css('border-bottom', '1px dotted');
 			}
