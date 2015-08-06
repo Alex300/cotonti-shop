@@ -1,5 +1,5 @@
 <!-- BEGIN: MAIN -->
-<div class="shopMiniCart block">
+<div class="shopMiniCart block <!-- IF {TOTAL_PRODUCT} > 0 -->shop-cart-full<!-- ELSE -->shop-cart-empty<!-- ENDIF -->">
     <h2 class="cart"><i class="icon-shopping-cart"></i> {PHP.L.shop.cart_title}</h2>
     <!-- BEGIN: LIST -->
 	<div id="hiddencontainer" style=" display: none; ">

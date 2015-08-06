@@ -23,7 +23,9 @@ if (inShopCat($c)){
     shop_setLastVisitedCategory($c);
 
     // Не показываем товар, если он закончился
-    if(!$cfg['shop']['use_as_catalog'] && $cfg['shop']['stockhandle'] == 'disableit'){
-        $where['shop'] = "page_{$cfg['shop']['pextf_in_stock']}>0";
+    if(!cot::$cfg['shop']['use_as_catalog'] && cot::$cfg['shop']['stockhandle'] == 'disableit') {
+        $join_columns .= ", (p.page_prod_in_stock - p.page_prod_ordered) AS prod_available";
+
+        $where['shop'] = "(p.page_prod_in_stock - p.page_prod_ordered) > 0";
     }
 }
