@@ -24,8 +24,11 @@ if (inShopCat($c)){
 
     // Не показываем товар, если он закончился
     if(!cot::$cfg['shop']['use_as_catalog'] && cot::$cfg['shop']['stockhandle'] == 'disableit') {
-        $join_columns .= ", (p.page_prod_in_stock - p.page_prod_ordered) AS prod_available";
+        $inStockFld  = 'page_'.cot::$cfg['shop']['pextf_in_stock'];
+        $orderedFld = 'page_'.cot::$cfg['shop']['pextf_ordered'];
 
-        $where['shop'] = "(p.page_prod_in_stock - p.page_prod_ordered) > 0";
+        $join_columns .= ", (p.{$inStockFld} - p.{$orderedFld}) AS prod_available";
+
+        $where['shop'] = "(p.{$inStockFld} - p.{$orderedFld}) > 0";
     }
 }
