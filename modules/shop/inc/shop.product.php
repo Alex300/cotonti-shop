@@ -133,7 +133,6 @@ class ProductController{
 
         if (!$prod) return false;
 
-//        $tmp = ShopProduct::generateTags($prod);
         $tmp = cot_generate_pagetags($prod->toArray(), 'PROD_', 10);
 
         // Удалим лишнюю информацию
@@ -156,7 +155,7 @@ class ProductController{
     public function ajx_notify_meAction(){
         global $usr, $L;
 
-        $ret = array('error' => '', message => '');
+        $ret = array('error' => '', 'message' => '');
 
         $item = array();
         $item['product_id'] = cot_import('rprod_id', 'P', 'INT');
@@ -172,12 +171,12 @@ class ProductController{
         }
 
         //$this->_productAdapter->saveWaitingUser($item);
-        $product = ShopProduct::getById($item['product_id']);
+        $product = Product::getById($item['product_id']);
         if (!$product){
             $ret['error'] = $L['shop']['product_not_found'];
             return json_encode($ret);
         }
-        ShopProduct::saveWaitingUser($item);
+        Product::saveWaitingUser($item);
 
         $ret['message'] = $L['shop']['request_accepted'];
         return json_encode($ret);

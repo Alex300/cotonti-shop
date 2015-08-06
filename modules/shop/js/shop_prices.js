@@ -10,167 +10,131 @@
 // TODO при изменении количества считать и выводить цену умножая значения кол-ва на цену без ajax
 // TODO если мин. кол-во > 1 проверка на скидку сразу
 
+var shop;
 var shop_userInfo = '';
 
 (function($) {
-	$.fn.product = function(options) {
-		
-		this.each(function(){
-			var cart = $(this),
-			addtocart = cart.find('.addtocart-button'),
-            notify    = cart.find('.notify-button'),
-			plus   = cart.find('.quantity-plus'),
-			minus  = cart.find('.quantity-minus'),
-			select = cart.find('select'),
-			radio = cart.find('input:radio'),
-			product_id = cart.find('input[name="shop_product_id[]"]').val(),
-			quantity = cart.find('.quantity-input'),
-            min_order = parseFloat(cart.find('input[name="min_order"]').val()),
-            //in_pack = cart.find('input[name="in_pack"]').val(),
-            step = parseFloat(cart.find('input[name="step"]').val());
+    //'use strict';
 
-            if (isNaN(step) || step == 0) step = 1;
-            if (isNaN(min_order) || min_order == 0) min_order = 1;
+	$.fn.productUpdate = function() {
+        var mod = $(this);
 
-			addtocart.click(function(e) { 
-				sendtocart(cart);
-				return false;
-			});
-            notify.click(function(e) {
-                notifyMe(cart);
-                return false;
-            });
-			plus.click(function() {
-				var Qtt = quantity.val();
-                Qtt = Qtt.replace(',', '.');
-                Qtt = parseFloat(Qtt);
-				if (!isNaN(Qtt)) {
-                    var newQtt = shop_nearMultiple(Qtt + step, step);
-					quantity.val(newQtt);
-                    $.setproducttype(cart,product_id);
-				}else{
-                    quantity.val(min_order);
+ 		$.getJSON("/index.php?e=shop&m=cart&a=viewJS",
+			function(datas, textStatus) {
+				if (datas.totalProduct > 0) {
+					mod.find(".shop_cart_products").html("").fadeTo('fast', 0.3);
+                    mod.find(".total_products").fadeTo('fast', 0.3);
+					$.each(datas.products, function(key, val) {
+						$("#hiddencontainer .miniCart-container").clone().appendTo(shop.cart.miniCartClass + ' .shop_cart_products');
+						$.each(val, function(key, val) {
+							if ($("#hiddencontainer .miniCart-container ."+key)) mod.find(".shop_cart_products ."+key+":last").html(val) ;
+						});
+					});
+					mod.find(".total").html(datas.billTotal);
+					mod.find(".show_cart").html(datas.cart_show);
+
+                    mod.addClass('shop-cart-full').removeClass('shop-cart-empty');
+				} else {
+                    mod.removeClass('shop-cart-full').addClass('shop-cart-empty');
                 }
-			});
-			minus.click(function() {
-                var Qtt = quantity.val();
-                Qtt = Qtt.replace(',', '.');
-                Qtt = parseFloat(Qtt);
-				if (!isNaN(Qtt) && Qtt>min_order) {
-                    var newQtt = shop_nearMultiple(Qtt - step, step);
-					quantity.val(newQtt);
-                    $.setproducttype(cart,product_id);
-				}else{
-                    quantity.val(min_order);
-                }
-			});
+				mod.find(".total_products").html(datas.totalProductTxt).fadeTo('fast', 1);
+                mod.find(".shop_cart_products").fadeTo('fast', 1).css('border-bottom', '1px dotted');
+			}
+		);
 
-			select.change(function() {
-				$.setproducttype(cart, product_id);
-			});
+        return mod;
+	};
 
-			radio.change(function() {
-				$.setproducttype(cart, product_id);
-			});
+    // ==== Shop Object ====
+    shop = {
+        cart: {
+
+            // Миникорзина на странице сайта
+            miniCart: null,
+
+            // Селектор для миникорзины
+            miniCartClass: '.shopMiniCart',
 
             /**
-             * Проверка step
+             * Add to Cart
+             * @param form Объект формы добавления в корзину или соотвествующие данные
+             * @returns {boolean}
              */
-            quantity.blur(function() {
-                var Qtt = parseFloat(quantity.val());
-                if (Qtt == min_order)  return ;
+            add: function(form) {
+                'use strict';
 
-                if (Qtt < min_order){
-                    Qtt = min_order;
-                    quantity.val(Qtt);
-                    $.setproducttype(cart, product_id);
-                    return ;
-                }
-                if (min_order != step){
-                    var tmp = Qtt - min_order;
-                    var newQtt = shop_nearMultiple(tmp, step) + min_order;
-
-                }else{
-                    var newQtt = shop_nearMultiple(Qtt, step);
+                var datas = form;
+                // Если передали реально форму
+                if(form.serialize) {
+                    datas = form.serialize();
                 }
 
-                if(Qtt != newQtt){
-                    if (newQtt < min_order) newQtt = min_order;
-                    quantity.val(newQtt);
-                    $.setproducttype(cart, product_id);
+                var title = form.title || '';
+                if(title == '' && form.find) {
+                    title = form.find('input[name="ptitle"]').val();
                 }
-            });
 
-            quantity.keyup(function() {
-                var Qtt = quantity.val();
-                var allowDecimal = cart.find('input[name="allow_decimal"]').val();
-                if(allowDecimal == 1){
-                    Qtt = Qtt.match(new RegExp("[\\d]+[.,]{0,1}[\\d]*",'g'));
-                    if (Qtt){
-                        Qtt = Qtt[0];
-                        Qtt = Qtt.replace(',', '.');
-                    }
-                }else{
-                    Qtt = parseInt(Qtt);
-                }
-				if (isNaN(Qtt)){
-                    Qtt = min_order;
-                    quantity.val(min_order);
-                }else{
-                    quantity.val(Qtt);
-                }
-				$.setproducttype(cart, product_id);
-			});
-		});
+                $.post('/index.php?e=shop&m=cart&a=ajxAdd', datas,
+                    function(datas, textStatus) {
+                        if(datas.stat == 1) {
+                            title = title + ' ' + shopCartText;
+                            if (datas.act == 'popup'){
+                                shopDialog({
+                                    text  : datas.msg,
+                                    title : title,
+                                    dialogClass: 'done'
+                                });
+                            }else if(datas.act == 'cart'){
+                                window.location.href = datas.cartlink;
+                            }
 
-		function sendtocart(form){
-			var datas = form.serialize();
-            $.post('/index.php?e=shop&m=cart&a=ajxAdd', datas,
-				function(datas, textStatus) {
-					if(datas.stat ==1){
-                        var title = form.find('input[name="ptitle"]').val()+' '+shopCartText;
-                        if (datas.act == 'popup'){
+                        } else if(datas.stat == 2) {
+                            var value = form.find('.quantity-input').val() ;
                             shopDialog({
                                 text  : datas.msg,
                                 title : title,
-                                dialogClass: 'done'
+                                dialogClass: 'warning'
+                            })
+
+                        } else {
+                            title = shopCartError;
+                            shopDialog({
+                                text  : datas.msg,
+                                title : title,
+                                dialogClass: 'error'
                             });
-                        }else if(datas.act == 'cart'){
-                            window.location.href = datas.cartlink;
                         }
-					} else if(datas.stat ==2){
-						var value = form.find('.quantity-input').val() ;
-						var title = form.find('input[name="ptitle"]').val();
-                        shopDialog({
-                            text  : datas.msg,
-                            title : title,
-                            dialogClass: 'warning'
-                        })
-					} else {
-                        title = shopCartError;
-                        shopDialog({
-                            text  : datas.msg,
-                            title : title,
-                            dialogClass: 'error'
-                        });
-					}
-                    // такой класс должен быть у дива корзины
-					if ($(".shopMiniCart")[0]) {
-						$(".shopMiniCart").productUpdate();
-					}
-				}, "json");
+
+                        // такой класс должен быть у дива корзины
+                        if (shop.cart.miniCart.length > 0) {
+                            shop.cart.miniCart.productUpdate();
+                        }
+                    }, "json");
 
                 return false;
-		};
 
-        function notifyMe(form){
-            //var datas = form.serialize();
-            var content = $('.notify_text').html();
-            var notifyText = content;
-            $('.notify_text').html('');
+            }
+        },
+
+        /**
+         * Добавить пользователя в наблюдатели за поступлением товара
+         * @param form form Объект формы добавления в корзину или соотвествующие данные
+         * @returns {boolean}
+         */
+        notifyUser: function(form) {
+            'use strict';
+
+            var notifyTextElement = $('.notify_text'),
+                content = notifyTextElement.html(),
+                notifyText = content;
+
+            notifyTextElement.html('');
+
             var notifyTitle = $('.notify_title').html();
             var prodTitle = form.find('input[name="ptitle"]').val();
+
             notifyText = notifyText.replace('%1$s', prodTitle);
+
             var prod_id = form.find('input[name="shop_product_id[]"]').val();
             var x = form.find('input[name="x"]').val();
             shopDialog({
@@ -200,9 +164,9 @@ var shop_userInfo = '';
                                 title : notifyTitle,
                                 buttons: [
                                     {text: 'Ok',
-                                     click: function(){
+                                        click: function(){
 //                                            $('.notify_text').html('content');
-                                            shopDialogClose()
+                                            shopDialogClose();
                                             return;
                                         }
                                     }
@@ -214,82 +178,260 @@ var shop_userInfo = '';
             });
 
             return false;
-        };
+        },
 
+        /**
+         * Товар, "Летит в корзину"
+         * @param el елемент страницы, который должен "полететь"
+         */
+        productFlyToCart: function(el) {
+            'use strict';
 
-	}
-	$.setproducttype = function(form, id){
-		var datas = form.serialize(),
-		prices = $("#productPrice"+id);
-        var in_pack = parseFloat(form.find('input[name="in_pack"]').val());
-        var Qtt = parseFloat(form.find('input[name="quantity[]"]').val());
-        var unit = form.find('input[name="unit"]').val();
+            var width       = el.width(),
+                height      = el.height(),
+                flyEl       = $('<div />'),
+                offset      = el.offset(),                  // Координаты элемента;
+                cartOffset  = shop.cart.miniCart.offset(),  // Координаты корзины
+                duration    = Math.ceil(offset.top * 1.5);
 
-        $.post('/index.php?e=shop&m=product&a=recalculate', datas,
-			function(datas, textStatus) {
-				// refresh price
-				for(key in datas) {
-					var value = datas[key];
-                    var priceSpan = prices.find("span.Price"+key);
-					if (value!=0) {
-                        var blink = false;
-                        if (priceSpan.html() != value){
-                            priceSpan.fadeTo("fast", 0.5);
-                            blink = true;
-                        }
-                        priceSpan.html(value);
-                        prices.children(".Price"+key).show();
-                        if (blink) priceSpan.fadeTo("fast", 1);
-                    }else{
-                        priceSpan.html(0);
-                        prices.children(".Price"+key).hide();
-                    }
-				};
-                $('#Pricetotal_'+id).html(datas.total);
-                $('#prodTotal_'+id).fadeTo("fast", 1);
-                var packsQt = Math.floor(Qtt/in_pack);
-                var ost = Qtt - (in_pack * packsQt);
-                ost = Math.round(ost * 1000) / 1000;
-                var inPackHtml = packsQt;
-                if (ost > 0) inPackHtml = inPackHtml + ' (+'+ ost +' '+ unit +')';
-                $('#packsTotal_'+id).html(inPackHtml);
-			}, "json");
-		return false; // prevent reload
-	};	
-	$.fn.productUpdate = function() {
-        mod = $(this);
+            //console.log(offset, cartOffset);
 
-		$.getJSON("/index.php?e=shop&m=cart&a=viewJS",
-			function(datas, textStatus) {
-				if (datas.totalProduct > 0) {
-					mod.find(".shop_cart_products").html("").fadeTo('fast', 0.3);
-                    mod.find(".total_products").fadeTo('fast', 0.3);
-					$.each(datas.products, function(key, val) {
-						$("#hiddencontainer .miniCart-container").clone().appendTo(".shopMiniCart .shop_cart_products");
-						$.each(val, function(key, val) {
-							if ($("#hiddencontainer .miniCart-container ."+key)) mod.find(".shop_cart_products ."+key+":last").html(val) ;
-						});
-					});
-					mod.find(".total").html(datas.billTotal);
-					mod.find(".show_cart").html(datas.cart_show);
-
-                    mod.addClass('shop-cart-full').removeClass('shop-cart-empty');
-				} else {
-                    mod.removeClass('shop-cart-full').addClass('shop-cart-empty');
+            flyEl.attr('id', el.attr('id') + 'flying').addClass('prod-flying').
+                css({
+                    //'z-index': '99999',
+                    zIndex: '100',
+                    border: '2px solid #ddd',
+                    boxShadow: '0 5px 10px rgba(0, 0, 0, 0.2)',
+                    position:  'absolute'
+                });
+            el.clone().css({opacity: 1}).appendTo(flyEl);
+            flyEl.appendTo('body').offset(offset);
+            flyEl.animate({
+                    opacity: 0.7,
+                    top:  Math.ceil(cartOffset.top),
+                    left: Math.ceil(cartOffset.left),
+                    width: 50,
+                    height: 50
+                }, duration,
+                function() {
+                    $(this).remove();
                 }
-				mod.find(".total_products").html(datas.totalProductTxt).fadeTo('fast', 1);
-                mod.find(".shop_cart_products").fadeTo('fast', 1).css('border-bottom', '1px dotted');
-			}
-		);
-	}
+            );
+        },
+
+        /**
+         * Установка параметров товара
+         * @param form
+         * @param id
+         */
+        setProductType: function(form, id) {
+            'use strict';
+
+            var datas = form.serialize(),
+                prices = $("#productPrice"+id);
+            var in_pack = parseFloat(form.find('input[name="in_pack"]').val());
+            var Qtt = parseFloat(form.find('input[name="quantity[]"]').val());
+            var unit = form.find('input[name="unit"]').val();
+
+            $.post('/index.php?e=shop&m=product&a=recalculate', datas,
+                function(datas, textStatus) {
+                    // refresh price
+                    for(var key in datas) {
+                        var value = datas[key];
+                        var priceSpan = prices.find("span.Price"+key);
+                        if (value!=0) {
+                            var blink = false;
+                            if (priceSpan.html() != value){
+                                priceSpan.fadeTo("fast", 0.5);
+                                blink = true;
+                            }
+                            priceSpan.html(value);
+                            prices.children(".Price"+key).show();
+                            if (blink) priceSpan.fadeTo("fast", 1);
+                        }else{
+                            priceSpan.html(0);
+                            prices.children(".Price"+key).hide();
+                        }
+                    }
+                    $('#Pricetotal_'+id).html(datas.total);
+                    $('#prodTotal_'+id).fadeTo("fast", 1);
+                    var packsQt = Math.floor(Qtt/in_pack);
+                    var ost = Qtt - (in_pack * packsQt);
+                    ost = Math.round(ost * 1000) / 1000;
+                    var inPackHtml = packsQt;
+                    if (ost > 0) inPackHtml = inPackHtml + ' (+'+ ost +' '+ unit +')';
+                    $('#packsTotal_'+id).html(inPackHtml);
+                }, "json");
+            return false; // prevent reload
+        },
+
+        init: function () {
+            'use strict';
+
+            if(shop.cart.miniCart == null) {
+                shop.cart.miniCart = $(shop.cart.miniCartClass);
+            }
+
+
+        }
+    };
+    // ==== /Shop Object ====
+
+    // ==== Bind Event Handlers ====
+    $(document).on('click', '.addtocart-button', function(e) {
+        e.preventDefault();
+        var form = $(this).closest('form.product');
+        shop.cart.add(form);
+
+        return false;
+    });
+
+    $(document).on('click', '.notify-button', function(e) {
+        e.preventDefault();
+        var form = $(this).closest('form.product');
+        shop.notifyUser(form);
+
+        return false;
+    });
+
+    $(document).on('click', 'form.product .quantity-plus', function(e) {
+        e.preventDefault();
+
+        var form        = $(this).closest('form.product'),
+            product_id  = form.find('input[name="shop_product_id[]"]').val(),
+            quantity    = form.find('.quantity-input'),
+            Qtt         = quantity.val(),
+            min_order   = parseFloat(form.find('input[name="min_order"]').val()),
+            step        = parseFloat(form.find('input[name="step"]').val());
+
+        if (isNaN(step) || step == 0) step = 1;
+        if (isNaN(min_order) || min_order == 0) min_order = 1;
+
+        Qtt = Qtt.replace(',', '.');
+        Qtt = parseFloat(Qtt);
+        if (!isNaN(Qtt)) {
+            var newQtt = shop_nearMultiple(Qtt + step, step);
+            quantity.val(newQtt);
+            shop.setProductType(form, product_id);
+
+        }else{
+            quantity.val(min_order);
+        }
+
+        return false;
+    });
+
+    $(document).on('click', 'form.product .quantity-minus', function(e) {
+        e.preventDefault();
+
+        var form        = $(this).closest('form.product'),
+            product_id  = form.find('input[name="shop_product_id[]"]').val(),
+            quantity    = form.find('.quantity-input'),
+            Qtt         = quantity.val(),
+            min_order   = parseFloat(form.find('input[name="min_order"]').val()),
+            step        = parseFloat(form.find('input[name="step"]').val());
+
+        if (isNaN(step) || step == 0) step = 1;
+        if (isNaN(min_order) || min_order == 0) min_order = 1;
+
+        Qtt = Qtt.replace(',', '.');
+        Qtt = parseFloat(Qtt);
+        if (!isNaN(Qtt) && Qtt > min_order) {
+            var newQtt = shop_nearMultiple(Qtt - step, step);
+            quantity.val(newQtt);
+            shop.setProductType(form, product_id);
+
+        } else {
+            quantity.val(min_order);
+        }
+
+        return false;
+    });
+
+    $(document).on('click', '.product select', function(e) {
+        var form        = $(this).closest('form.product');
+        shop.setProductType(form, product_id);
+    });
+
+    $(document).on('click', '.product input:radio', function(e) {
+        var form        = $(this).closest('form.product');
+        shop.setProductType(form, product_id);
+    });
+
+    // Проверяем шаг при выборе количества товара
+    $(document).on('blur', '.product .quantity-input', function(e) {
+        var form        = $(this).closest('form.product'),
+            product_id  = form.find('input[name="shop_product_id[]"]').val(),
+            Qtt         = parseFloat($(this).val()),
+            min_order   = parseFloat(form.find('input[name="min_order"]').val()),
+            step        = parseFloat(form.find('input[name="step"]').val());
+
+        console.log('blur');
+
+        if (isNaN(step) || step == 0) step = 1;
+        if (isNaN(min_order) || min_order == 0) min_order = 1;
+
+        if (Qtt == min_order)  return ;
+
+        if (Qtt < min_order){
+            Qtt = min_order;
+            $(this).val(Qtt);
+            shop.setProductType(form, product_id);
+            return ;
+        }
+        if (min_order != step){
+            var tmp = Qtt - min_order;
+            var newQtt = shop_nearMultiple(tmp, step) + min_order;
+
+        }else{
+            var newQtt = shop_nearMultiple(Qtt, step);
+        }
+
+        if(Qtt != newQtt){
+            if (newQtt < min_order) newQtt = min_order;
+            $(this).val(newQtt);
+            shop.setProductType(form, product_id);
+        }
+    });
+
+    $(document).on('keyup', '.product .quantity-input', function(e) {
+        var form        = $(this).closest('form.product'),
+            product_id  = form.find('input[name="shop_product_id[]"]').val(),
+            Qtt         = $(this).val(),
+            allowDecimal = form.find('input[name="allow_decimal"]').val(),
+            min_order   = parseFloat(form.find('input[name="min_order"]').val());
+
+        console.log('keyup');
+
+        if(allowDecimal == 1){
+            Qtt = Qtt.match(new RegExp("[\\d]+[.,]{0,1}[\\d]*",'g'));
+            if (Qtt) {
+                Qtt = Qtt[0];
+                Qtt = Qtt.replace(',', '.');
+            }
+
+        } else {
+            Qtt = parseInt(Qtt);
+        }
+        if (isNaN(Qtt)){
+            Qtt = min_order;
+            $(this).val(min_order);
+
+        } else {
+            $(this).val(Qtt);
+        }
+        shop.setProductType(form, product_id);
+    });
+    // ==== /Bind Event Handlers ====
 
 })(jQuery);
 
+
 /**
  * Найти число ближайшее к $num и кратное $k
- * @param float $num
- * @param float $k
- * @return float
+ * @param num float
+ * @param k   float
+ * @returns float
  */
 function shop_nearMultiple(num, k){
     var tmp = num % k;
@@ -304,12 +446,15 @@ function shop_nearMultiple(num, k){
     return max;
 }
 
+
+
 jQuery(document).ready(function($) {
-	$(".product").product();
+    shop.init();
+
 	$("form.js-recalculate").each(function(){
 		if ($(this).find(".product-fields").length) {
 			var id= $(this).find('input[name="shop_product_id[]"]').val();
-			$.setproducttype($(this),id);
+            shop.setProductType($(this),id);
 		}
 	});
 });

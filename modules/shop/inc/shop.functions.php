@@ -149,20 +149,28 @@ define('SHOP_CONFIG_TYPE_CUSTOM', 21);
 
 // === /Конфиг ===
 
+/**
+ * Автозагрузчик для классов модуля
+ * @param $class
+ * @return bool
+ */
 function shopAutoLoader($class){
     global $cfg;
     $fName = $cfg['modules_dir'].DS.'shop'.DS.'models'.DS.$class.'.php';
 
     if(file_exists($fName)){
         include($fName);
+
     }else{
         $fName = $cfg['modules_dir'].DS.'shop'.DS.'lib'.DS.$class.'.php';
-        if(file_exists($fName)){
+        if(file_exists($fName)) {
             include($fName);
+
         }else{
             return false;
         }
     }
+    return false;
 }
 
 

@@ -21,13 +21,13 @@ if ($env['ext'] == 'page' || $env['location'] == 'shop'){
 
     if(!COT_AJAX && empty($shop_priceScript)){
         if (!in_array($m, array('add', 'edit', 'user')) && ($env['location'] == 'shop' || inShopCat($tmp)) ){
-            cot_rc_link_file($cfg['modules_dir'].'/shop/js/shop_prices.js');    // без консолидации
-            cot_rc_link_file($cfg['modules_dir'].'/shop/js/shop_dialog.js');
-            cot_rc_link_file($cfg['modules_dir'].'/shop/tpl/shop.css', 'css');
+            Resources::linkFile($cfg['modules_dir'].'/shop/js/shop_prices.js');    // без консолидации
+            Resources::linkFile($cfg['modules_dir'].'/shop/js/shop_dialog.js');
+            Resources::linkFile($cfg['modules_dir'].'/shop/tpl/shop.css', 'css');
             $jsVars = '';
             $jsVars .= "shopCartText = '". addslashes( $L['shop']['minicart_added_js'] )."' ;\n" ;
             $jsVars .= "shopCartError = '". addslashes( $L['shop']['minicart_error_js'] )."' ;\n" ;
-            cot_rc_embed($jsVars);
+            Resources::embed($jsVars);
             $jsVars = '';
             //cot_rc_add_file($cfg['modules_dir'].'/shop/js/shop_prices.js'); // с консолидацией выводится в глобал'е
 
@@ -41,7 +41,7 @@ if ($env['ext'] == 'page' || $env['location'] == 'shop'){
 if ($env['location'] == 'pages' && in_array($m, array('add', 'edit'))){
     $tmp = (isset($pag['page_cat'])) ? $pag['page_cat'] : $c;
     if (!COT_AJAX && inShopCat($tmp)){
-        cot_rc_link_file($cfg['modules_dir'].'/shop/js/shop_edit_product.js');  
+        Resources::linkFile($cfg['modules_dir'].'/shop/js/shop_edit_product.js');
     }
 }
 
@@ -59,7 +59,7 @@ if (!defined('COT_ADMIN') && (!defined('COT_AJAX') || !COT_AJAX ) && $m != 'edit
                     jQuery(".shopMiniCart").productUpdate();
 
                 });' ;
-                cot_rc_embed($jsVars);
+                Resources::embed($jsVars);
                 $jsVars = '';
             }
         }
@@ -69,17 +69,17 @@ if (!defined('COT_ADMIN') && (!defined('COT_AJAX') || !COT_AJAX ) && $m != 'edit
 
 // Конфигурация модуля Shop
 if (defined('COT_ADMIN') && $m == 'config' && $n == 'edit' && $o == 'module' && $p == 'shop') {
-    cot_rc_link_file($cfg['modules_dir'] . '/shop/js/shop_dialog.js');
-    cot_rc_link_file($cfg['modules_dir'] . '/shop/js/shop.config.js');
+    Resources::linkFile($cfg['modules_dir'] . '/shop/js/shop_dialog.js');
+    Resources::linkFile($cfg['modules_dir'] . '/shop/js/shop.config.js');
 }
 //var_dump($env['location']);
 
 if(!COT_AJAX) {
     // Правильные селекты в админке
     if (defined('COT_ADMIN') && $m == 'shop' && !in_array($n, array('order'))) {
-        cot_rc_link_file($cfg['modules_dir'] . '/shop/js/select2/select2.min.js');
-        cot_rc_link_file($cfg['modules_dir'] . '/shop/js/select2/select2.css');
-        cot_rc_embed_footer(
+        Resources::linkFile($cfg['modules_dir'] . '/shop/js/select2/select2.min.js');
+        Resources::linkFile($cfg['modules_dir'] . '/shop/js/select2/select2.css');
+        Resources::embedFooter(
             '$(document).ready(function() { $("select").select2(); });'
         );
     }
