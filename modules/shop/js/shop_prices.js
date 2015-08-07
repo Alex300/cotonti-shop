@@ -1,10 +1,23 @@
 /**
- * module shop for Cotonti Siena
- * 
- * @package shop
- * @author Alex
- * @copyright http://portal30.ru
+ * module Shop for Cotonti Siena
+ *
+ * @package Shop
+ * @author  Kalnov Alexey    <kalnovalexey@yandex.ru>
+ * @copyright (с) Portal30 Studio http://portal30.ru
  */
+
+
+/**
+ * Пример обработчика события
+ * "Товар добавлен в корзину"
+ */
+//$(document).on('shop.cart.added', function(e) {
+    // Add some text to displayed message
+    //e.text = 'Some text' + e.text;
+
+    // Or turn off the message
+    //e.act = '';
+//});
 
 // TODO защита от двойного включения
 // TODO при изменении количества считать и выводить цену умножая значения кол-ва на цену без ajax
@@ -47,72 +60,92 @@ var shop_userInfo = '';
 
     // ==== Shop Object ====
     shop = {
-        cart: {
+        // Селектор для миникорзины
+        miniCartClass: '.shopMiniCart',
 
+        cart: {
             // Миникорзина на странице сайта
             miniCart: null,
 
-            // Селектор для миникорзины
-            miniCartClass: '.shopMiniCart',
-
             /**
              * Add to Cart
-             * @param form Объект формы добавления в корзину или соотвествующие данные
+             * @param productData Объект формы добавления в корзину или соотвествующие данные
              * @returns {boolean}
              */
-            add: function(form) {
+            add: function(productData) {
                 'use strict';
 
-                var datas = form;
+                var datas = productData;
                 // Если передали реально форму
-                if(form.serialize) {
-                    datas = form.serialize();
+                if(productData.serialize) {
+                    datas = productData.serialize();
                 }
 
-                var title = form.title || '';
-                if(title == '' && form.find) {
-                    title = form.find('input[name="ptitle"]').val();
+                var title = productData.title || '';
+                if(title == '' && productData.find) {
+                    title = productData.find('input[name="ptitle"]').val();
                 }
 
                 $.post('/index.php?e=shop&m=cart&a=ajxAdd', datas,
                     function(datas, textStatus) {
+
+                        if(datas.stat == 1) title = title + ' ' + shopCartText;
+
+                        var addEvent = jQuery.Event('shop.cart.added', {
+                            act: datas.act,
+                            title: title,
+                            text: datas.msg,
+                            cartElement: shop.cart.miniCart,
+                            status: datas.stat,
+                            productData: productData,
+                            datas: datas
+                        });
+                        shop.cart.miniCart.trigger(addEvent);
+                        if (addEvent.isDefaultPrevented()) return;
+
                         if(datas.stat == 1) {
-                            title = title + ' ' + shopCartText;
-                            if (datas.act == 'popup'){
+                            if (addEvent.act == 'popup'){
                                 shopDialog({
-                                    text  : datas.msg,
-                                    title : title,
+                                    text  : addEvent.text,
+                                    title : addEvent.title,
                                     dialogClass: 'done'
                                 });
-                            }else if(datas.act == 'cart'){
+
+                            }else if(addEvent.act == 'cart'){
                                 window.location.href = datas.cartlink;
                             }
 
                         } else if(datas.stat == 2) {
-                            var value = form.find('.quantity-input').val() ;
+                            var value = productData.find('.quantity-input').val() ;
                             shopDialog({
-                                text  : datas.msg,
-                                title : title,
+                                text  : addEvent.text,
+                                title : addEvent.title,
                                 dialogClass: 'warning'
                             })
 
                         } else {
                             title = shopCartError;
                             shopDialog({
-                                text  : datas.msg,
+                                text  : addEvent.text,
                                 title : title,
                                 dialogClass: 'error'
                             });
                         }
 
-                        // такой класс должен быть у дива корзины
-                        if (shop.cart.miniCart.length > 0) {
-                            shop.cart.miniCart.productUpdate();
-                        }
+                        shop.cart.update();
                     }, "json");
 
                 return false;
 
+            },
+
+            /**
+             * Обновление отображения миникорзины
+             */
+            update: function() {
+                if (shop.cart.miniCart.length > 0) {
+                    shop.cart.miniCart.productUpdate();
+                }
             }
         },
 
@@ -193,8 +226,6 @@ var shop_userInfo = '';
                 offset      = el.offset(),                  // Координаты элемента;
                 cartOffset  = shop.cart.miniCart.offset(),  // Координаты корзины
                 duration    = Math.ceil(offset.top * 1.5);
-
-            //console.log(offset, cartOffset);
 
             flyEl.attr('id', el.attr('id') + 'flying').addClass('prod-flying').
                 css({
@@ -366,8 +397,6 @@ var shop_userInfo = '';
             min_order   = parseFloat(form.find('input[name="min_order"]').val()),
             step        = parseFloat(form.find('input[name="step"]').val());
 
-        console.log('blur');
-
         if (isNaN(step) || step == 0) step = 1;
         if (isNaN(min_order) || min_order == 0) min_order = 1;
 
@@ -400,8 +429,6 @@ var shop_userInfo = '';
             Qtt         = $(this).val(),
             allowDecimal = form.find('input[name="allow_decimal"]').val(),
             min_order   = parseFloat(form.find('input[name="min_order"]').val());
-
-        console.log('keyup');
 
         if(allowDecimal == 1){
             Qtt = Qtt.match(new RegExp("[\\d]+[.,]{0,1}[\\d]*",'g'));
@@ -445,8 +472,6 @@ function shop_nearMultiple(num, k){
 
     return max;
 }
-
-
 
 jQuery(document).ready(function($) {
     shop.init();

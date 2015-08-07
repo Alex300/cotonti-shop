@@ -5,13 +5,14 @@ Hooks=header.first
 [END_COT_EXT]
 ==================== */
  /**
-  * module shop for Cotonti Siena
-  * 
-  * @package shop
-  * @author Alex
+  * module Shop for Cotonti Siena
+  *
+  * @package Shop
+  * @author  Kalnov Alexey    <kalnovalexey@yandex.ru>
+  * @copyright (с) Portal30 Studio http://portal30.ru
   */
 defined('COT_CODE') or die('Wrong URL.');
-//var_dump($env['location']);
+
 // загрузка JS CSS
 if ($env['ext'] == 'page' || $env['location'] == 'shop'){
     require_once cot_incfile('shop', 'module');
@@ -56,8 +57,7 @@ if (!defined('COT_ADMIN') && (!defined('COT_AJAX') || !COT_AJAX ) && $m != 'edit
 
                 // TODO выводить где-нить в JS файле
                 $jsVars  = ' jQuery(document).ready(function(){
-                    jQuery(".shopMiniCart").productUpdate();
-
+                    shop.cart.update();
                 });' ;
                 Resources::embed($jsVars);
                 $jsVars = '';
