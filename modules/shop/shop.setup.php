@@ -111,7 +111,5 @@ sunitPrice=a9:string::1|1|2:Standarized price
  * @package Shop
  * @author  Kalnov Alexey    <kalnovalexey@yandex.ru>
  * @copyright (с) 2012-2015 Portal30 Studio http://portal30.ru (Begin: 2012-01-16)
- *
- * v.1.0.1 Добавлена возможность для каждой группы пользователей установить минимальную сумму заказа
  */
 defined('COT_CODE') or die('Wrong URL');

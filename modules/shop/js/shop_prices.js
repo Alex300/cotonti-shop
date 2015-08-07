@@ -12,11 +12,11 @@
  * "Товар добавлен в корзину"
  */
 //$(document).on('shop.cart.added', function(e) {
-    // Add some text to displayed message
-    //e.text = 'Some text' + e.text;
-
-    // Or turn off the message
-    //e.act = '';
+//    // Add some text to displayed message
+//    e.text = 'Some text' + e.text;
+//
+//    // Or turn off the message
+//    e.act = '';
 //});
 
 // TODO защита от двойного включения
@@ -38,7 +38,7 @@ var shop_userInfo = '';
 					mod.find(".shop_cart_products").html("").fadeTo('fast', 0.3);
                     mod.find(".total_products").fadeTo('fast', 0.3);
 					$.each(datas.products, function(key, val) {
-						$("#hiddencontainer .miniCart-container").clone().appendTo(shop.cart.miniCartClass + ' .shop_cart_products');
+						$("#hiddencontainer .miniCart-container").clone().appendTo(shop.miniCartClass + ' .shop_cart_products');
 						$.each(val, function(key, val) {
 							if ($("#hiddencontainer .miniCart-container ."+key)) mod.find(".shop_cart_products ."+key+":last").html(val) ;
 						});
@@ -300,7 +300,7 @@ var shop_userInfo = '';
             'use strict';
 
             if(shop.cart.miniCart == null) {
-                shop.cart.miniCart = $(shop.cart.miniCartClass);
+                shop.cart.miniCart = $(shop.miniCartClass);
             }
 
 
